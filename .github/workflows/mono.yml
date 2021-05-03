@@ -1,0 +1,44 @@
+﻿name: Mono
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.SSH_KEY }}
+        name: id_rsa
+        known_hosts: ${{ secrets.KNOWN_HOSTS }}
+        if_key_exists: fail
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Update submodules
+      run: git submodule update --init --recursive
+    - name: Install Mono and MonoDevelop
+      run: |
+        sudo apt install -y apt-transport-https dirmngr
+        sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
+        echo "deb https://download.mono-project.com/repo/ubuntu vs-bionic main" | sudo tee /etc/apt/sources.list.d/mono-official-vs.list
+        sudo apt update
+        sudo apt install -y mono-complete monodevelop
+    - name: Publicize assemblies
+      run: build/publicizer.sh
+    - name: Build
+      run: |
+        mkdir -p build/target
+        pushd src
+        mdtool build -c:Release -t:Clean
+        mdtool build -c:Release -t:Build
+        popd
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: build-target
+        path: build/target/*

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ItemType>GenericProject</ItemType>
+    <ProjectGuid>{9203D2F8-529C-4BE0-9479-4CAF1BB911B6}</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>.\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include=".gitignore" />
+    <None Include=".github\workflows\mono.yml" />
+    <None Include="build\publicizer.sh" />
+    <None Include="build\AssemblyPublicizer\AssemblyPublicizer.exe" />
+    <None Include="build\AssemblyPublicizer\Licenses\Mono.Options.LICENSE.txt" />
+    <None Include="build\AssemblyPublicizer\Licenses\Mono.Cecil.LICENSE.txt" />
+    <None Include="build\AssemblyPublicizer\Licenses\AssemblyPublicizer.LICENSE.txt" />
+    <None Include=".gitmodules" />
+    <None Include="COPYING" />
+  </ItemGroup>
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <Policies>
+          <StandardHeader IncludeInNewFiles="True" Text=" Copyright (c) ${Year} ${CopyrightHolder}&#xA;&#xA; This file is part of KeybindLib.&#xA;&#xA; KeybindLib is free software: you can redistribute it and/or modify&#xA; it under the terms of the GNU General Public License as published by&#xA; the Free Software Foundation, either version 3 of the License, or&#xA; (at your option) any later version.&#xA;&#xA; KeybindLib is distributed in the hope that it will be useful,&#xA; but WITHOUT ANY WARRANTY; without even the implied warranty of&#xA; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the&#xA; GNU General Public License for more details.&#xA;&#xA; You should have received a copy of the GNU General Public License&#xA; along with KeybindLib.  If not, see &lt;http://www.gnu.org/licenses/&gt;." />
+        </Policies>
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
+</Project>

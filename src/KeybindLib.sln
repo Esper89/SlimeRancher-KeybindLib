@@ -1,0 +1,26 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeybindLib", "KeybindLib\KeybindLib.csproj", "{8F68A793-FA37-4159-82FA-088D28190AC5}"
+EndProject
+Project("{9344BDBB-3E7F-41FC-A0DD-8665D75EE146}") = "", "..\.mdproj", "{9203D2F8-529C-4BE0-9479-4CAF1BB911B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestMod", "TestMod\TestMod.csproj", "{782272B5-7B61-4840-ABF2-9E53B3D8A80F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8F68A793-FA37-4159-82FA-088D28190AC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F68A793-FA37-4159-82FA-088D28190AC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F68A793-FA37-4159-82FA-088D28190AC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F68A793-FA37-4159-82FA-088D28190AC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9203D2F8-529C-4BE0-9479-4CAF1BB911B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9203D2F8-529C-4BE0-9479-4CAF1BB911B6}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{782272B5-7B61-4840-ABF2-9E53B3D8A80F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{782272B5-7B61-4840-ABF2-9E53B3D8A80F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{782272B5-7B61-4840-ABF2-9E53B3D8A80F}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,3 @@
+[submodule "build/build-depends"]
+	path = build/build-depends
+	url = ssh://git@99.241.154.192:4680/srv/git/SlimeRancher-build-depends.git

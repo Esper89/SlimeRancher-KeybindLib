@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+        <ProjectGuid>{782272B5-7B61-4840-ABF2-9E53B3D8A80F}</ProjectGuid>
+        <OutputType>Library</OutputType>
+        <RootNamespace>TestMod</RootNamespace>
+        <AssemblyName>TestMod</AssemblyName>
+        <Nullable>enable</Nullable>
+        <NoWarn>IDE0002;CS0628</NoWarn>
+        <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
+        <Optimize>false</Optimize>
+        <OutputPath>bin\Debug</OutputPath>
+        <DefineConstants>DEBUG;</DefineConstants>
+        <ErrorReport>prompt</ErrorReport>
+        <WarningLevel>4</WarningLevel>
+        <ConsolePause>false</ConsolePause>
+        <CustomCommands>
+            <CustomCommands>
+                <Command>
+                    <type>AfterBuild</type>
+                    <command>cp "${TargetFile}" "/home/esper/Games/Epic Games/SlimeRancher/SRML/Mods/"</command>
+                    <workingdir>${ProjectDir}</workingdir>
+                </Command>
+            </CustomCommands>
+        </CustomCommands>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <LangVersion>8.0</LangVersion>
+    </PropertyGroup>
+    <ItemGroup>
+        <Reference Include="System" />
+        <Reference Include="Assembly-CSharp_publicized">
+            <HintPath>..\..\build\build-depends\publicized_assemblies\Assembly-CSharp_publicized.dll</HintPath>
+        </Reference>
+        <Reference Include="InControl_publicized">
+            <HintPath>..\..\build\build-depends\publicized_assemblies\InControl_publicized.dll</HintPath>
+        </Reference>
+        <Reference Include="0Harmony">
+            <HintPath>..\..\build\build-depends\0Harmony.dll</HintPath>
+        </Reference>
+        <Reference Include="SRML">
+            <HintPath>..\..\build\build-depends\SRML.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+    <ItemGroup>
+        <Compile Include="Main.cs" />
+        <Compile Include="Properties\AssemblyInfo.cs" />
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="modinfo.json" />
+    </ItemGroup>
+    <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>
