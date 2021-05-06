@@ -21,13 +21,13 @@
         <WarningLevel>4</WarningLevel>
         <ConsolePause>false</ConsolePause>
         <CustomCommands>
-            <CustomCommands>
-                <Command>
-                    <type>AfterBuild</type>
-                    <command>cp "${TargetFile}" "/home/esper/Games/Epic Games/SlimeRancher/SRML/Mods/"</command>
-                    <workingdir>${ProjectDir}</workingdir>
-                </Command>
-            </CustomCommands>
+          <CustomCommands>
+            <Command>
+              <type>AfterBuild</type>
+              <command>cp "${TargetFile}" "/home/esper/Games/Epic Games/SlimeRancher/SRML/Mods/"</command>
+              <workingdir>${ProjectDir}</workingdir>
+            </Command>
+          </CustomCommands>
         </CustomCommands>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <LangVersion>8.0</LangVersion>
@@ -53,6 +53,12 @@
     </ItemGroup>
     <ItemGroup>
         <EmbeddedResource Include="modinfo.json" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\KeybindLib\KeybindLib.csproj">
+        <Project>{8F68A793-FA37-4159-82FA-088D28190AC5}</Project>
+        <Name>KeybindLib</Name>
+      </ProjectReference>
     </ItemGroup>
     <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

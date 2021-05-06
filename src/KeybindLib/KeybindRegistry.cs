@@ -15,41 +15,40 @@
 //  You should have received a copy of the GNU General Public License
 //  along with KeybindLib.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using InControl;
 using System.Collections.Generic;
+using InControl;
 using Reg = KeybindLib.KeybindRegistry;
 
 namespace KeybindLib
 {
     public static class KeybindRegistry
     {
-        public static void Register(ModKeybind keybind)
+        public static void Register(Keybind keybind)
         {
             Reg.keybinds.Add(keybind);
-            Reg.InsertBeforeAdd(keybind);
+            Reg.AddToInsertBefore(keybind);
         }
 
-        internal static readonly List<ModKeybind> keybinds
-            = new List<ModKeybind> { };
+        internal static readonly List<Keybind> keybinds
+            = new List<Keybind> { };
 
-        internal static readonly Dictionary<ModKeybind, PlayerAction> actions
-            = new Dictionary<ModKeybind, PlayerAction> { };
+        internal static readonly Dictionary<Keybind, PlayerAction> actions // Must be manually bound to each keybind.
+            = new Dictionary<Keybind, PlayerAction> { };
 
-        internal static readonly Dictionary<string, List<ModKeybind>> insertBefore
-            = new Dictionary<string, List<ModKeybind>> { };
+        internal static readonly Dictionary<string?, List<Keybind>> insertBefore // Necessary to load a keybind.
+            = new Dictionary<string?, List<Keybind>> { };
 
-        private static void InsertBeforeAdd(ModKeybind keybind)
+        private static void AddToInsertBefore(Keybind keybind)
         {
-            if (Reg.insertBefore.ContainsKey(keybind.KeybindName))
+            if (Reg.insertBefore.ContainsKey(keybind.ComesBefore))
             {
-                Reg.insertBefore[keybind.KeybindName]
+                Reg.insertBefore[keybind.ComesBefore]
                     .Add(keybind);
             }
             else
             {
-                Reg.insertBefore[keybind.KeybindName]
-                    = new List<ModKeybind> { keybind };
+                Reg.insertBefore[keybind.ComesBefore]
+                    = new List<Keybind> { keybind };
             }
         }
     }

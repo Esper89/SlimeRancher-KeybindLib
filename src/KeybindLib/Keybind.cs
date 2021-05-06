@@ -15,35 +15,27 @@
 //  You should have received a copy of the GNU General Public License
 //  along with KeybindLib.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.ComponentModel;
-using SRML;
-using Reg = KeybindLib.KeybindRegistry;
-
 namespace KeybindLib
 {
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public class Main : ModEntryPoint
+    public class Keybind
     {
-        public override void PreLoad()
+        public Keybind(
+            Binding[] defaultBindings,
+            string name,
+            string? comesBefore = null
+        )
         {
-            Main.HarmonyInstance ??= base.HarmonyInstance;
-#if DEBUG
-            HarmonyLib.Harmony.DEBUG = true;
-#endif
-            Main.HarmonyInstance.PatchAll();
+            this.DefaultBindings = defaultBindings;
+            this.Name = name;
+            this.ComesBefore = comesBefore;
+
+            this.ActionName = "Act." + this.Name;
         }
 
-        public override void Load()
-        {
-            foreach (Keybind keybind in Reg.keybinds)
-            {
-                foreach (Binding binding in keybind.DefaultBindings)
-                {
-                    binding.BindTo(Reg.actions[keybind]);
-                }
-            }
-        }
+        public Binding[] DefaultBindings { get; }
+        public string Name { get; }
+        public string? ComesBefore { get; }
 
-        new internal static HarmonyLib.Harmony? HarmonyInstance;
+        protected internal string ActionName { get; }
     }
 }

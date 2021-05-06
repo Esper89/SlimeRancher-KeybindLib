@@ -3,7 +3,7 @@
   "name": "TestMod",
   "version": "0.1",
   "author": "Esper89",
-  "description": "A mod for testing KeybindLib",
-  "dependencies": [ "keybindinglib" ],
-  "load_after": [ "keybindinglib" ]
+  "description": "A mod for testing KeybindLib.",
+  "dependencies": [ "keybindlib 0.1" ],
+  "load_after": [ "keybindlib" ]
 }

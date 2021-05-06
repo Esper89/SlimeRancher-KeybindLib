@@ -15,18 +15,17 @@
 //  You should have received a copy of the GNU General Public License
 //  along with KeybindLib.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using HarmonyLib;
 using Reg = KeybindLib.KeybindRegistry;
 
 namespace KeybindLib.Patches
 {
-    [HarmonyPatch(typeof(SRInput.PlayerActions), MethodType.Constructor, new Type[] { typeof(SRInput) })]
-    internal static class PlayerActionsConstructorPatch
+    [HarmonyPatch(typeof(SRInput.PlayerActions), MethodType.Constructor, new[] { typeof(SRInput) })]
+    internal static class PlayerActionsPatch
     {
         internal static void Postfix(SRInput.PlayerActions __instance)
         {
-            foreach (ModKeybind keybind in Reg.keybinds)
+            foreach (Keybind keybind in Reg.keybinds)
             {
                 Reg.actions[keybind] = __instance.CreatePlayerAction(keybind.ActionName);
             }

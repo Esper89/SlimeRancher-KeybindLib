@@ -15,35 +15,26 @@
 //  You should have received a copy of the GNU General Public License
 //  along with KeybindLib.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.ComponentModel;
-using SRML;
+using System;
+using HarmonyLib;
+using SRML.Editor;
 using Reg = KeybindLib.KeybindRegistry;
 
-namespace KeybindLib
+namespace KeybindLib.Patches
 {
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public class Main : ModEntryPoint
+    // ReplacerCache.ClearCache is called right after all other mods finish preloading, and it's not on the stack during preload.
+    [HarmonyPatch(typeof(ReplacerCache), nameof(ReplacerCache.ClearCache))]
+    internal static class SRMLPreloadPatch
     {
-        public override void PreLoad()
+        internal static void Postfix()
         {
-            Main.HarmonyInstance ??= base.HarmonyInstance;
 #if DEBUG
-            HarmonyLib.Harmony.DEBUG = true;
-#endif
-            Main.HarmonyInstance.PatchAll();
-        }
-
-        public override void Load()
-        {
             foreach (Keybind keybind in Reg.keybinds)
             {
-                foreach (Binding binding in keybind.DefaultBindings)
-                {
-                    binding.BindTo(Reg.actions[keybind]);
-                }
+                Log.Write($"{nameof(Keybind)} {keybind.Name} {nameof(keybind.ComesBefore)} {keybind.ComesBefore}.");
             }
+#endif
+            InputPatch.Apply();
         }
-
-        new internal static HarmonyLib.Harmony? HarmonyInstance;
     }
 }

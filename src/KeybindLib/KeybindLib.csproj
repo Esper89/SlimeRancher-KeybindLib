@@ -64,29 +64,31 @@
         <Reference Include="0Harmony">
           <HintPath>..\..\build\build-depends\0Harmony.dll</HintPath>
         </Reference>
-        <Reference Include="SRML">
-          <HintPath>..\..\build\build-depends\SRML.dll</HintPath>
-        </Reference>
         <Reference Include="UnityEngine.CoreModule">
           <HintPath>..\..\build\build-depends\UnityEngine.CoreModule.dll</HintPath>
+        </Reference>
+        <Reference Include="SlimeTranslationAPI">
+          <HintPath>..\..\build\build-depends\SlimeTranslationAPI.dll</HintPath>
+        </Reference>
+        <Reference Include="SRML_publicized">
+          <HintPath>..\..\build\build-depends\publicized_assemblies\SRML_publicized.dll</HintPath>
         </Reference>
     </ItemGroup>
     <ItemGroup>
         <Compile Include="Properties\AssemblyInfo.cs" />
         <Compile Include="Main.cs" />
-        <Compile Include="Patches\PlayerActionsConstructorPatch.cs" />
-        <Compile Include="ModKeybind.cs" />
-        <Compile Include="DefaultBinding.cs" />
+        <Compile Include="Patches\PlayerActionsPatch.cs" />
+        <Compile Include="Keybind.cs" />
+        <Compile Include="Binding.cs" />
         <Compile Include="KeybindRegistry.cs" />
-        <Compile Include="Patches\DefaultBindingsPatch.cs" />
         <Compile Include="Patches\InputPatch.cs" />
+        <Compile Include="Patches\SRMLPreloadPatch.cs" />
+        <Compile Include="Log.cs" />
     </ItemGroup>
     <ItemGroup>
         <EmbeddedResource Include="modinfo.json" />
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="Utils\" />
-      <Folder Include="Utils\Harmony\" />
       <Folder Include="Patches\" />
     </ItemGroup>
     <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

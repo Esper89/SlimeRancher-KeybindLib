@@ -16,100 +16,132 @@
 //  along with KeybindLib.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
+using GP = KeybindLib.Patches.InputPatch.GamepadInputPatch;
+using InstrEnum = System.Collections.Generic.IEnumerable<HarmonyLib.CodeInstruction>;
+using KB = KeybindLib.Patches.InputPatch.KeyboardInputPatch;
 using Reg = KeybindLib.KeybindRegistry;
 
 namespace KeybindLib.Patches
 {
     internal static class InputPatch
     {
-        [HarmonyPatch(typeof(OptionsUI), nameof(OptionsUI.SetupInput))]
+        internal static void Apply() // Must be run after all mods are done preloading.
+        {
+            Type[] tpiler = new[] { typeof(InstrEnum) };
+
+            Main.HarmonyInstance?.Patch(
+                original: KB.targetMethod,
+                transpiler: new HarmonyMethod(
+                    AccessTools.Method(typeof(KB), nameof(KB.Transpiler), tpiler)
+                )
+            );
+
+            Main.HarmonyInstance?.Patch(
+                original: GP.targetMethod,
+                transpiler: new HarmonyMethod(
+                    AccessTools.Method(typeof(GP), nameof(GP.Transpiler), tpiler)
+                )
+            );
+        }
+
         internal static class KeyboardInputPatch
         {
-            internal static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+            internal static readonly MethodInfo targetMethod = AccessTools.Method(
+                typeof(OptionsUI),
+                nameof(OptionsUI.SetupInput),
+                new Type[] { }
+            );
+
+            internal static InstrEnum Transpiler(InstrEnum instructions)
             {
                 return Transpile(instructions, AccessTools.Method(
-                    typeof(KeyboardInputPatch),
-                    nameof(KeyboardInputPatch.CreateKeyBindingLines),
-                    new Type[] { typeof(OptionsUI), typeof(string) }
+                    typeof(KB),
+                    nameof(KB.CreateKeyBindingLines),
+                    new[] { typeof(OptionsUI), typeof(string) }
                 ));
             }
 
-            internal static void CreateKeyBindingLines(OptionsUI instance, string keyName)
+            private static void CreateKeyBindingLines(OptionsUI instance, string keyName)
             {
-                foreach (ModKeybind keybind in Reg.insertBefore[keyName])
+                foreach (Keybind keybind in Reg.insertBefore[keyName])
                 {
                     instance.CreateKeyBindingLine(
-                        keybind.KeybindName,
+                        keybind.Name,
                         Reg.actions[keybind]
                     );
                 }
             }
         }
 
-        [HarmonyPatch(typeof(GamepadPanel), nameof(GamepadPanel.SetupBindings))]
         internal static class GamepadInputPatch
         {
-            internal static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-            {
-                return Transpile(instructions, AccessTools.Method(
-                    typeof(GamepadInputPatch),
-                    nameof(GamepadInputPatch.CreateGamepadBindingLines),
-                    new Type[] { typeof(GamepadPanel), typeof(string) }
-                ));
-            }
+            internal static readonly MethodInfo targetMethod = AccessTools.Method(
+                typeof(GamepadPanel),
+                nameof(GamepadPanel.SetupBindings),
+                new Type[] { }
+            );
 
-            internal static void CreateGamepadBindingLines(GamepadPanel instance, string keyName)
+            internal static InstrEnum Transpiler(InstrEnum instructions)
+                => Transpile(instructions, AccessTools.Method(
+                    typeof(GP),
+                    nameof(GP.CreateGamepadBindingLines),
+                    new[] { typeof(GamepadPanel), typeof(string) }
+                ));
+
+            private static void CreateGamepadBindingLines(GamepadPanel instance, string keyName)
             {
-                foreach (ModKeybind keybind in Reg.insertBefore[keyName])
+                foreach (Keybind keybind in Reg.insertBefore[keyName])
                 {
                     instance.CreateGamepadBindingLine(
-                        keybind.KeybindName,
+                        keybind.Name,
                         Reg.actions[keybind]
                     );
                 }
             }
         }
 
-        private static IEnumerable<CodeInstruction> Transpile(
-            IEnumerable<CodeInstruction> instructions,
-            MethodInfo method // void (object, string) // FIXME use generics and delegates for type safety
+        private static InstrEnum Transpile(
+            InstrEnum instructions,
+            MethodInfo method // void (object, string)
         )
         {
+            /* ...
+               ldarg.0
+               ldstr <key>
+             > ldarg.0
+             > ldstr <key>
+             > call <method>(object, string)
+               call SRInput.get_Actions()
+               ldfld PlayerActions.<action>
+               call this.CreateKeyBinding(string, PlayerAction)
+               pop
+               ...
+             */
+
+            // TODO Ensure null entries still get added to the list.
+            // Preferably at the bottom of the list.
+
             bool started = false;
             bool done = false;
-            // (With regards to the CreateKeyBinding calls)
+            // (Regarding the CreateKeyBinding calls)
 
             foreach (CodeInstruction instr in instructions)
             {
                 yield return instr;
 
                 if (!done &&
-                    instr.opcode == OpCodes.Ldstr &&
-                    Reg.insertBefore.ContainsKey((string)instr.operand)
+                    instr.opcode == OpCodes.Ldstr && // Ldstr indicates a new CreateKeyBinding call.
+                    Reg.insertBefore.ContainsKey((string)instr.operand) // Operand is the name of the keybinding being created.
                 )
                 {
-                    started = true; // First valid ldstr.
+                    started = true; // First valid ldstr, now capable of "being done".
 
-                    /* ...
-                       ldarg.0
-                       ldstr <key>
-                     > call <method>
-                     > ldarg.0
-                     > ldstr <key>
-                       call SRInput.get_Actions()
-                       ldfld PlayerActions.<action>
-                       call this.CreateKeyBinding(string, PlayerAction)
-                       pop
-                       ...
-                     */
-
-                    yield return new CodeInstruction(OpCodes.Call, method);
-                    yield return new CodeInstruction(OpCodes.Ldarg_0);
-                    yield return new CodeInstruction(OpCodes.Ldstr, instr.operand);
+                    yield return new CodeInstruction(OpCodes.Ldarg_0); // ldarg.0
+                    yield return new CodeInstruction(OpCodes.Ldstr, instr.operand); // ldstr <key>
+                    yield return new CodeInstruction(OpCodes.Call, method); // call <method>(object, string)
                 }
                 else if (instr.opcode == OpCodes.Callvirt && started)
                 {
@@ -117,11 +149,5 @@ namespace KeybindLib.Patches
                 }
             }
         }
-
-
-
-
-
-
     }
 }

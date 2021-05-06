@@ -13,6 +13,8 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using InControl;
+using KeybindLib;
 using SRML;
 
 namespace TestMod
@@ -21,7 +23,29 @@ namespace TestMod
     {
         public override void PreLoad()
         {
+            KeybindRegistry.Register(
+                new Keybind(
+                    defaultBindings: new Binding[] { Key.T },
+                    name: "key.testkey",
+                    comesBefore: "key.reportissue"
+                )
+            );
 
+            KeybindRegistry.Register(
+                new Keybind(
+                    defaultBindings: new Binding[] { Key.J },
+                    name: "key.jestkey",
+                    comesBefore: "key.reportissue"
+                )
+            );
+
+            KeybindRegistry.Register(
+                new Keybind(
+                    defaultBindings: new Binding[] { Key.K },
+                    name: "key.kestkey",
+                    comesBefore: "key.screenshot"
+                )
+            );
         }
     }
 }
