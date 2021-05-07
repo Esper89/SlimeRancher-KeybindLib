@@ -15,41 +15,152 @@
 //  You should have received a copy of the GNU General Public License
 //  along with KeybindLib.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using System.Collections.Generic;
-using InControl;
+using System.ComponentModel;
 using Reg = KeybindLib.KeybindRegistry;
 
 namespace KeybindLib
 {
+    /// <summary> Registers <see cref="Keybind"/>s and keeps track of metadata. </summary>
     public static class KeybindRegistry
     {
+        /// <summary> Registers a <see cref="Keybind"/>. </summary>
+        /// <param name="keybind"> The <see cref="Keybind"/> to register.  </param>
+        /// <exception cref="KeybindInvalidException"> Thrown when <paramref name="keybind"/> has an invalid <see cref="Keybind.Name"/> or <see cref="Keybind.ComesBefore"/>. </exception>
+        /// <exception cref="KeybindRegisteredTooLateException"> Thrown when this method is called after PreLoad. </exception>
+        /// <remarks> Registered keybinds must have a unique <see cref="Keybind.Name"/> and a valid <see cref="Keybind.ComesBefore"/>. </remarks>
+        /// <seealso cref="Register(IEnumerable{Keybind})"/>
         public static void Register(Keybind keybind)
         {
+#if DEBUG
+            try
+            {
+#endif
+                Reg.ValidateKeybind(keybind);
+#if DEBUG
+            }
+            catch (Exception ex)
+            {
+                if (ex is KeybindInvalidException || ex is KeybindRegisteredTooLateException)
+                {
+                    Log.Write(ex);
+                }
+                else
+                {
+                    throw;
+                }
+            }
+#endif
+            Reg.registeredNames.Add(keybind.Name);
             Reg.keybinds.Add(keybind);
-            Reg.AddToInsertBefore(keybind);
+            Reg.AddKeybindPosition(keybind);
         }
+
+        /// <summary> Registers a collection of <see cref="Keybind"/>s. </summary>
+        /// <param name="keybinds"> The <see cref="Keybind"/>s to register. </param>
+        /// <seealso cref="Register(Keybind)"/>
+        /// <inheritdoc cref="Register(Keybind)"/>
+        public static void Register(IEnumerable<Keybind> keybinds)
+        {
+            foreach (Keybind keybind in keybinds)
+            {
+                Reg.Register(keybind);
+            }
+        }
+
+        #region collections
+
+        private static readonly HashSet<string> registeredNames
+            = new HashSet<string> { };
 
         internal static readonly List<Keybind> keybinds
             = new List<Keybind> { };
 
-        internal static readonly Dictionary<Keybind, PlayerAction> actions // Must be manually bound to each keybind.
-            = new Dictionary<Keybind, PlayerAction> { };
+        internal static readonly Dictionary<string, List<Keybind>> comesBefore
+            = new Dictionary<string, List<Keybind>> { };
 
-        internal static readonly Dictionary<string?, List<Keybind>> insertBefore // Necessary to load a keybind.
-            = new Dictionary<string?, List<Keybind>> { };
+        internal static readonly List<Keybind> defaultKeybinds
+            = new List<Keybind> { };
 
-        private static void AddToInsertBefore(Keybind keybind)
+        #endregion
+
+        private static void AddKeybindPosition(Keybind keybind)
         {
-            if (Reg.insertBefore.ContainsKey(keybind.ComesBefore))
+            if (keybind.ComesBefore is null)
             {
-                Reg.insertBefore[keybind.ComesBefore]
-                    .Add(keybind);
+                Reg.defaultKeybinds.Add(keybind);
             }
             else
             {
-                Reg.insertBefore[keybind.ComesBefore]
-                    = new List<Keybind> { keybind };
+                if (Reg.comesBefore.ContainsKey(keybind.ComesBefore))
+                {
+                    Reg.comesBefore[keybind.ComesBefore]
+                        .Add(keybind);
+                }
+                else
+                {
+                    Reg.comesBefore[keybind.ComesBefore]
+                        = new List<Keybind> { keybind };
+                }
             }
         }
+
+        #region validation
+
+        private static void ValidateKeybind(Keybind keybind)
+        {
+            if (Main.hasPreloaded)
+            {
+                throw new KeybindRegisteredTooLateException(keybind);
+            }
+            else if (Reg.registeredNames.Contains(keybind.Name) ||
+                MethodKeybindExtractor.VanillaKeybinds.Contains(keybind.Name))
+            {
+                throw new KeybindInvalidException(keybind, nameTaken: true);
+            }
+            else if (keybind.ComesBefore is object &&
+                !MethodKeybindExtractor.VanillaKeybinds.Contains(keybind.ComesBefore))
+            {
+                throw new KeybindInvalidException(keybind, nameTaken: false);
+            }
+        }
+
+        /// <summary> An exception thrown when an invalid <see cref="Keybind"/> is registered. </summary>
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        public sealed class KeybindInvalidException : ArgumentException
+        {
+            internal KeybindInvalidException(Keybind keybind, bool nameTaken = true) : base(
+                $@"Attempted to register keybind {
+                (nameTaken ?
+                    $"with existing name ({keybind.Name}). Cannot register duplicate keybind." :
+                    $"at a nonexistant point in the keybind list ({keybind.ComesBefore})."
+                )}"
+            )
+            {
+                this.Keybind = keybind;
+            }
+
+            /// <summary> The invalid <see cref="Keybind"/> in question. </summary>
+            public Keybind Keybind { get; }
+        }
+
+        /// <summary> An exception thrown when a <see cref="KeybindLib.Keybind"/> is registered after <see cref="KeybindLib"/> has been PreLoaded. </summary>
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        public sealed class KeybindRegisteredTooLateException : InvalidOperationException
+        {
+            internal KeybindRegisteredTooLateException(Keybind keybind) : base(
+                $"Attempted to register {nameof(KeybindLib.Keybind)} after {nameof(Main.PreLoad)}. " +
+                $"Make sure {nameof(KeybindLib)} is in your mod's 'load_before' in your modinfo.json"
+            )
+            {
+                this.Keybind = keybind;
+            }
+
+            /// <summary> The <see cref="Keybind"/> that was registered too late. </summary>
+            public Keybind Keybind { get; }
+        }
+
+        #endregion
     }
 }

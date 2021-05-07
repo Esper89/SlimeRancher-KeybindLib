@@ -23,5 +23,8 @@ namespace KeybindLib
     {
         public static void Write(object msg)
             => Console.WriteLine($"{nameof(KeybindLib)}: {msg}");
+
+        public static void Append(string text)
+            => Console.Write(text);
     }
 }

@@ -39,6 +39,7 @@
         <ErrorReport>prompt</ErrorReport>
         <WarningLevel>4</WarningLevel>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <DocumentationFile>bin\Release\KeybindLib.xml</DocumentationFile>
         <ConsolePause>false</ConsolePause>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <LangVersion>8.0</LangVersion>
@@ -61,17 +62,17 @@
         <Reference Include="InControl_publicized">
           <HintPath>..\..\build\build-depends\publicized_assemblies\InControl_publicized.dll</HintPath>
         </Reference>
-        <Reference Include="0Harmony">
-          <HintPath>..\..\build\build-depends\0Harmony.dll</HintPath>
-        </Reference>
         <Reference Include="UnityEngine.CoreModule">
           <HintPath>..\..\build\build-depends\UnityEngine.CoreModule.dll</HintPath>
         </Reference>
         <Reference Include="SlimeTranslationAPI">
           <HintPath>..\..\build\build-depends\SlimeTranslationAPI.dll</HintPath>
         </Reference>
-        <Reference Include="SRML_publicized">
-          <HintPath>..\..\build\build-depends\publicized_assemblies\SRML_publicized.dll</HintPath>
+        <Reference Include="0Harmony_publicized">
+          <HintPath>..\..\build\build-depends\publicized_assemblies\0Harmony_publicized.dll</HintPath>
+        </Reference>
+        <Reference Include="SRML">
+          <HintPath>..\..\build\build-depends\SRML.dll</HintPath>
         </Reference>
     </ItemGroup>
     <ItemGroup>
@@ -82,8 +83,8 @@
         <Compile Include="Binding.cs" />
         <Compile Include="KeybindRegistry.cs" />
         <Compile Include="Patches\InputPatch.cs" />
-        <Compile Include="Patches\SRMLPreloadPatch.cs" />
         <Compile Include="Log.cs" />
+        <Compile Include="MethodKeybindExtractor.cs" />
     </ItemGroup>
     <ItemGroup>
         <EmbeddedResource Include="modinfo.json" />

@@ -16,64 +16,96 @@
 //  along with KeybindLib.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.ComponentModel;
 using InControl;
 using Button = InControl.InputControlType;
 
 namespace KeybindLib
 {
+    /// <summary> A binding. </summary>
+    /// <remarks> Represents the various types of bindings accepted by <see cref="InControl"/>. </remarks>
     public struct Binding
     {
+        #region constructors
+
+        /// <summary> Creates a new <see cref="Binding"/> from a <see cref="Key"/>. </summary>
         public Binding(Key key)
         {
-            this.Key = key;
+            this.binding = key;
         }
 
+        /// <summary> Creates a new <see cref="Binding"/> from a <see cref="Button"/>. </summary>
         public Binding(Button button)
         {
-            this.Key = button;
+            this.binding = button;
         }
 
+        /// <summary> Creates a new <see cref="Binding"/> from a <see cref="Mouse"/>. </summary>
         public Binding(Mouse mouse)
         {
-            this.Key = mouse;
+            this.binding = mouse;
         }
 
-        internal object Key { get; }
+        #endregion
+
+        private readonly object binding;
 
         #region operators
 
+        /// <summary> Converts a <see cref="Key"/> to a <see cref="Binding"/>. </summary>
         public static implicit operator Binding(Key key)
             => new Binding(key);
 
+        /// <summary> Converts a <see cref="Button"/> to a <see cref="Binding"/>. </summary>
         public static implicit operator Binding(Button button)
             => new Binding(button);
 
+        /// <summary> Converts a <see cref="Mouse"/> to a <see cref="Binding"/>. </summary>
         public static implicit operator Binding(Mouse mouse)
             => new Binding(mouse);
 
         #endregion
 
-        internal void BindTo(PlayerAction action)
+        internal void BindTo(PlayerAction action) // If you know how to do this better, please send a PR.
         {
-            Type type = this.Key.GetType();
+            Type type = this.binding.GetType();
 
             if (type.Equals(typeof(Key)))
             {
-                action.AddDefaultBinding((Key)this.Key);
+                action.AddDefaultBinding((Key)this.binding);
             }
             else if (type.Equals(typeof(Button)))
             {
-                action.AddDefaultBinding((Button)this.Key);
+                action.AddDefaultBinding((Button)this.binding);
             }
             else if (type.Equals(typeof(Mouse)))
             {
-                action.AddDefaultBinding((Mouse)this.Key);
+                action.AddDefaultBinding((Mouse)this.binding);
             }
             else // Good luck.
             {
-                throw new InvalidOperationException($"{nameof(Binding)} instance is not a valid type. " +
-                    $"Valid types are: {typeof(Key).FullName}, {typeof(Button).FullName}, {typeof(Mouse).FullName}");
+#if DEBUG
+                Log.Write(new BindingNotValidException(this));
+#else
+                throw new BindingNotValidException(this);
+#endif
             }
+        }
+
+        /// <summary> An exception thrown when a <see cref="KeybindLib.Binding"/> is in a heinously invalid state. </summary>
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        public sealed class BindingNotValidException : InvalidCastException
+        {
+            internal BindingNotValidException(Binding binding) : base(
+                $"{nameof(Binding)} instance is not a valid type. " +
+                $"Valid types are: {typeof(Key).FullName}, {typeof(Button).FullName}, {typeof(Mouse).FullName}"
+            )
+            {
+                this.Binding = binding;
+            }
+
+            /// <summary> The <see cref="KeybindLib.Binding"/> that was in an invalid state. </summary>
+            public Binding Binding { get; }
         }
     }
 }

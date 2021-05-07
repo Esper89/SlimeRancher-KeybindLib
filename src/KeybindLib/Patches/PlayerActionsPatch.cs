@@ -16,18 +16,20 @@
 //  along with KeybindLib.  If not, see <http://www.gnu.org/licenses/>.
 
 using HarmonyLib;
+using InControl;
 using Reg = KeybindLib.KeybindRegistry;
 
 namespace KeybindLib.Patches
 {
     [HarmonyPatch(typeof(SRInput.PlayerActions), MethodType.Constructor, new[] { typeof(SRInput) })]
-    internal static class PlayerActionsPatch
+    internal static class PlayerActionsPatch // Creates the actions that correspond to each keybind. Runs between PreLoad and Load.
     {
         internal static void Postfix(SRInput.PlayerActions __instance)
         {
             foreach (Keybind keybind in Reg.keybinds)
             {
-                Reg.actions[keybind] = __instance.CreatePlayerAction(keybind.ActionName);
+                PlayerAction action = __instance.CreatePlayerAction(keybind.ActionName);
+                keybind.Action = action;
             }
         }
     }
