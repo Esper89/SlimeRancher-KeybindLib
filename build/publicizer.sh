@@ -8,7 +8,7 @@ publicize()
 pushd build/build-depends
 
 publicize Assembly-CSharp.dll
-publicize SRML.dll
 publicize InControl.dll
+publicize 0Harmony.dll
 
 popd

@@ -32,7 +32,6 @@ jobs:
       run: build/publicizer.sh
     - name: Build
       run: |
-        mkdir -p build/target
         pushd src
         mdtool build -c:Release -t:Clean
         mdtool build -c:Release -t:Build

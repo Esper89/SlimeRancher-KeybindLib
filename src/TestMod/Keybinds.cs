@@ -25,22 +25,35 @@ namespace TestMod
         public static Keybind Test { get; } // A property for each keybind.
             = new Keybind(
                 defaultBindings: new Binding[] { Key.T },
-                name: "key.test", // The name of the keybind; should start with "key".
+                name: "key.test",
                 comesBefore: "key.reportissue"
             );
 
         public static Keybind Jest { get; }
             = new Keybind(
                 defaultBindings: new Binding[] { Key.J }, // The keys that it should be bound to by default.
-                name: "key.jest",
-                comesBefore: "key.reportissue"
-            );
+                name: "key.jest"
+            ); // comesBefore is optional; omitting it will set it to null.
 
         public static Keybind Kest { get; }
             = new Keybind(
                 defaultBindings: new Binding[] { Key.K },
-                name: "key.kest",
-                comesBefore: "key.screenshot" // The name of the key that should come right after this keybind. Omit for the end of the list.
+                name: "key.kest", // The name of the keybind; should start with "key".
+                comesBefore: "key.screenshot"
+            );
+
+        public static Keybind Vest { get; }
+            = new Keybind(
+                defaultBindings: new Binding[] { Key.V },
+                name: "key.vest",
+                comesBefore: "key.left" // The name of the key that this keybind should come before. Indicates this keybind's position in the list.
+            );
+
+        public static Keybind Nest { get; }
+            = new Keybind(
+                defaultBindings: new Binding[] { Key.N },
+                name: "key.nest",
+                comesBefore: Keybind.BEGINNING_OF_LIST // This can be `Keybind.BEGINNING_OF_LIST` for the beginning of the list, or you can leave it as null for the end of the list.
             );
 
         internal static void Register() // A method for registering all your keybinds. Call during PreLoad.
@@ -49,7 +62,9 @@ namespace TestMod
             {
                 Keybinds.Test, // Each keybind to register.
                 Keybinds.Jest,
-                Keybinds.Kest
+                Keybinds.Kest,
+                Keybinds.Vest,
+                Keybinds.Nest
             });
         }
     }

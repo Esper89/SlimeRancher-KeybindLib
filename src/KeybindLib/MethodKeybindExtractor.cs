@@ -32,9 +32,9 @@ namespace KeybindLib
         static MethodKeybindExtractor() { } // beforefieldinit
 
         /// <summary> The set of all valid vanilla keybind names. </summary>
-        /// <remarks> Mutating this <see cref="HashSet{String}"/> has no effect. </remarks>
+        /// <remarks> Mutating this <see cref="HashSet{String}"/> has no effect. Includes <seealso cref="Keybind.BEGINNING_OF_LIST"/>. </remarks>
         public static HashSet<string> VanillaKeybinds
-            => new HashSet<string>(MethodKeybindExtractor.keybinds); // Duplicate the set to prevent tampering.
+            => new HashSet<string>(MethodKeybindExtractor._keybinds); // Duplicate the set to prevent tampering.
 
         /* key.forward
          * key.left
@@ -63,7 +63,7 @@ namespace KeybindLib
          * key.pedia
          */
 
-        private static readonly HashSet<string> keybinds
+        private static readonly HashSet<string> _keybinds
             = MethodKeybindExtractor.DumpAllKeybinds(); // Makes sure that this isn't run more than once.
 
         private static HashSet<string> DumpAllKeybinds()
@@ -82,23 +82,26 @@ namespace KeybindLib
                 )
             );
 
-            return new HashSet<string>(keyboardKeys.Union(gamepadKeys));
+            return new HashSet<string>(keyboardKeys.Union(gamepadKeys))
+            {
+                Keybind.BEGINNING_OF_LIST
+            };
         }
 
         private static HashSet<string> DumpKeybinds(MethodInfo method)
         {
-            List<CodeInstruction> instructions = new List<CodeInstruction> { };
+            var instructions = new List<CodeInstruction> { };
 
             MethodBodyReader.GetInstructions(GetILGenerator(), method).ForEach(
                 (instr) => instructions.Add(instr.GetCodeInstruction())
             ); // Uses Harmony's internals, because the proper method is not present in SRML's version of Harmony.
 
-            HashSet<string> set = new HashSet<string> { };
+            var set = new HashSet<string> { };
 
             foreach (CodeInstruction instr in instructions)
             {
                 if (instr.opcode == OpCodes.Ldstr &&
-                    ((string)instr.operand).StartsWith("key.")) // Let's hope keybinds continue to start with "key"...
+                    ((string)instr.operand).StartsWith(Keybind.KEYBIND_PREFIX))
                 {
                     set.Add((string)instr.operand);
                 }

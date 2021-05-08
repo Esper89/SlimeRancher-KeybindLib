@@ -50,32 +50,31 @@ namespace KeybindLib
         /// <summary> The name of the vanilla keybind that should come after this instance. </summary>
         /// <remarks> Indicates where in the list of keybinds this one should go. </remarks>
         /// <seealso cref="MethodKeybindExtractor.VanillaKeybinds"/>
+        /// <seealso cref="BEGINNING_OF_LIST"/>
         public virtual string? ComesBefore { get; }
 
         /// <summary> The name of this keybind's corresponding <see cref="PlayerAction"/>. </summary>
         protected internal virtual string ActionName => $"Action:{this.Name}";
 
+        /// <summary> A special string that can be used as <see cref="ComesBefore"/> to represent the beginning of the list. </summary>
+        public const string BEGINNING_OF_LIST = "BEGINNING";
+
+        /// <summary> The expected prefix that every keybind's name should have. </summary>
+        public const string KEYBIND_PREFIX = "key.";
+
         /// <summary> This instance's <seealso cref="PlayerAction"/>. </summary>
         /// <exception cref="KeybindNotReadyException"> Thrown when this is accessed before the Load step. </exception>
         public PlayerAction Action
         {
-#if DEBUG
-            get => this.action ?? new Func<PlayerAction>(() =>
-                {
-                    Log.Write(new KeybindNotReadyException(this));
-                    return null!; // Null safety does not exist when we compile in debug mode.
-                }
-            )();
-#else
-            get => this.action ?? throw new KeybindNotReadyException(this);
-#endif
+            get => this._action ?? throw new KeybindNotReadyException(this);
+
             internal set
             {
-                this.action = value;
+                this._action = value;
                 this.BindAllDefaultsTo(value);
             }
         }
-        private PlayerAction? action;
+        private PlayerAction? _action;
 
         /// <summary> Binds all <see cref="DefaultBindings"/> of this instance to the given <see cref="PlayerAction"/>. </summary>
         /// <param name="action"> The <see cref="PlayerAction"/> to bind to. </param>

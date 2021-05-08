@@ -84,15 +84,12 @@ namespace KeybindLib
             }
             else // Good luck.
             {
-#if DEBUG
-                Log.Write(new BindingNotValidException(this));
-#else
                 throw new BindingNotValidException(this);
-#endif
             }
         }
 
         /// <summary> An exception thrown when a <see cref="KeybindLib.Binding"/> is in a heinously invalid state. </summary>
+        /// <remarks> If you get this exception, either you were using reflection to do things you shouldn't, or it's not your fault (in which case something has gone very, very wrong). </remarks>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         public sealed class BindingNotValidException : InvalidCastException
         {

@@ -4,6 +4,6 @@
   "version": "0.1",
   "author": "Esper89",
   "description": "A library mod for adding new keybinds.",
-  "dependencies": [ "translationapi 1.0" ],
-  "load_after": [ "translationapi" ]
+  /* "dependencies": [ "translationapi 1.0" ],
+  "load_after": [ "translationapi" ] */
 }

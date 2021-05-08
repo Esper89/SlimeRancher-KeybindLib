@@ -19,12 +19,7 @@ using System;
 using System.ComponentModel;
 using SRML;
 
-/* If you compile with the DEBUG symbol defined, exceptions will not be thrown
- * by the mod. Instead, exceptions will be logged, and (in methods with
- * non-void return types) null will be returned, even when the method has a
- * non-nullable return type. This means that THIS PROGRAM IS NOT NULL SAFE
- * when compiled in the Debug configuration. Be warned.
- */
+// TODO Translations.
 
 namespace KeybindLib
 {
@@ -41,15 +36,7 @@ namespace KeybindLib
         {
 #if DEBUG
             HarmonyLib.Harmony.DEBUG = true;
-
-            Log.Write("BEGIN VANILLA KEYBINDS LIST");
-            foreach (string keybind in MethodKeybindExtractor.VanillaKeybinds)
-            {
-                Log.Append(keybind + Environment.NewLine);
-            }
-            Log.Write("END VANILLA KEYBINDS LIST");
 #endif
-
             base.HarmonyInstance.PatchAll();
 
             Main.hasPreloaded = true; // Lets the keybind registry know if it can accept new keybinds.

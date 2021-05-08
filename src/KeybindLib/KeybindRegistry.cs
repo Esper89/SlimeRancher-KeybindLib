@@ -33,25 +33,8 @@ namespace KeybindLib
         /// <seealso cref="Register(IEnumerable{Keybind})"/>
         public static void Register(Keybind keybind)
         {
-#if DEBUG
-            try
-            {
-#endif
-                Reg.ValidateKeybind(keybind);
-#if DEBUG
-            }
-            catch (Exception ex)
-            {
-                if (ex is KeybindInvalidException || ex is KeybindRegisteredTooLateException)
-                {
-                    Log.Write(ex);
-                }
-                else
-                {
-                    throw;
-                }
-            }
-#endif
+            Reg.ValidateKeybind(keybind);
+
             Reg.registeredNames.Add(keybind.Name);
             Reg.keybinds.Add(keybind);
             Reg.AddKeybindPosition(keybind);
@@ -78,9 +61,12 @@ namespace KeybindLib
             = new List<Keybind> { };
 
         internal static readonly Dictionary<string, List<Keybind>> comesBefore
-            = new Dictionary<string, List<Keybind>> { };
+            = new Dictionary<string, List<Keybind>>
+            {
+                [Keybind.BEGINNING_OF_LIST] = new List<Keybind> { }
+            };
 
-        internal static readonly List<Keybind> defaultKeybinds
+        internal static readonly List<Keybind> endOfListKeybinds
             = new List<Keybind> { };
 
         #endregion
@@ -89,19 +75,17 @@ namespace KeybindLib
         {
             if (keybind.ComesBefore is null)
             {
-                Reg.defaultKeybinds.Add(keybind);
+                Reg.endOfListKeybinds.Add(keybind);
             }
             else
             {
                 if (Reg.comesBefore.ContainsKey(keybind.ComesBefore))
                 {
-                    Reg.comesBefore[keybind.ComesBefore]
-                        .Add(keybind);
+                    Reg.comesBefore[keybind.ComesBefore].Add(keybind);
                 }
                 else
                 {
-                    Reg.comesBefore[keybind.ComesBefore]
-                        = new List<Keybind> { keybind };
+                    Reg.comesBefore[keybind.ComesBefore] = new List<Keybind> { keybind };
                 }
             }
         }
@@ -117,12 +101,12 @@ namespace KeybindLib
             else if (Reg.registeredNames.Contains(keybind.Name) ||
                 MethodKeybindExtractor.VanillaKeybinds.Contains(keybind.Name))
             {
-                throw new KeybindInvalidException(keybind, nameTaken: true);
+                throw new KeybindInvalidException(keybind, KeybindInvalidException.Reason.NameTaken);
             }
             else if (keybind.ComesBefore is object &&
                 !MethodKeybindExtractor.VanillaKeybinds.Contains(keybind.ComesBefore))
             {
-                throw new KeybindInvalidException(keybind, nameTaken: false);
+                throw new KeybindInvalidException(keybind, KeybindInvalidException.Reason.ComesBeforeMissing);
             }
         }
 
@@ -130,12 +114,21 @@ namespace KeybindLib
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         public sealed class KeybindInvalidException : ArgumentException
         {
-            internal KeybindInvalidException(Keybind keybind, bool nameTaken = true) : base(
-                $@"Attempted to register keybind {
-                (nameTaken ?
-                    $"with existing name ({keybind.Name}). Cannot register duplicate keybind." :
-                    $"at a nonexistant point in the keybind list ({keybind.ComesBefore})."
-                )}"
+            internal enum Reason
+            {
+                NameMissingPrefix, // When the keybind name is missing it's expected prefix.
+                NameTaken, // When the keybind name is already taken.
+                ComesBeforeMissing // When the keybind ComesBefore isn't in the list of vanilla keybinds.
+            }
+
+            internal KeybindInvalidException(Keybind keybind, Reason reason) : base(
+                $@"Attempted to register keybind {reason switch
+                {
+                    Reason.NameMissingPrefix => $" with an invalid name ({keybind.Name}). Keybind names must start with \"{ Keybind.KEYBIND_PREFIX }\".",
+                    Reason.NameTaken => $"with existing name ({keybind.Name}). Cannot register duplicate keybind.",
+                    Reason.ComesBeforeMissing => $"at a nonexistant point in the keybind list ({keybind.ComesBefore}).",
+                    _ => throw new ArgumentOutOfRangeException(nameof(reason))
+                }}"
             )
             {
                 this.Keybind = keybind;
