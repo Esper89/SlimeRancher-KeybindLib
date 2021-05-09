@@ -15,6 +15,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with KeybindLib.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using SRML;
 
 namespace TestMod
@@ -30,7 +31,10 @@ namespace TestMod
 
         public override void Load()
         {
-            // TODO Action access example.
+            if (Keybinds.Test.Action.IsPressed) // `Keybind.Action` can only be accessed after the PreLoad step.
+            {
+                Console.WriteLine("Hello World!");
+            }
 
             // ...
         }
