@@ -23,13 +23,13 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <LangVersion>8.0</LangVersion>
         <CustomCommands>
-          <CustomCommands>
-            <Command>
-              <type>AfterBuild</type>
-              <command>cp "${TargetFile}" "/home/esper/Games/Epic Games/SlimeRancher/SRML/Mods/"</command>
-              <workingdir>${ProjectDir}</workingdir>
-            </Command>
-          </CustomCommands>
+            <CustomCommands>
+                <Command>
+                    <type>AfterBuild</type>
+                    <command>cp "${TargetFile}" "/home/esper/Games/Epic Games/SlimeRancher/SRML/Mods/"</command>
+                    <workingdir>${ProjectDir}</workingdir>
+                </Command>
+            </CustomCommands>
         </CustomCommands>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -45,34 +45,34 @@
         <LangVersion>8.0</LangVersion>
         <PlatformTarget>x64</PlatformTarget>
         <CustomCommands>
-          <CustomCommands>
-            <Command>
-              <type>AfterBuild</type>
-              <command>bash -c 'mkdir -p "../build/target" &amp;&amp; cp "${TargetDir}/KeybindLib."* "../build/target/"'</command>
-              <workingdir>${SolutionDir}</workingdir>
-            </Command>
-          </CustomCommands>
+            <CustomCommands>
+                <Command>
+                    <type>AfterBuild</type>
+                    <command>bash -c 'mkdir -p "../build/target" &amp;&amp; cp "${TargetDir}/KeybindLib."* "../build/target/"'</command>
+                    <workingdir>${SolutionDir}</workingdir>
+                </Command>
+            </CustomCommands>
         </CustomCommands>
     </PropertyGroup>
     <ItemGroup>
         <Reference Include="System" />
         <Reference Include="Assembly-CSharp_publicized">
-          <HintPath>..\..\build\build-depends\publicized_assemblies\Assembly-CSharp_publicized.dll</HintPath>
+            <HintPath>..\..\build\build-depends\publicized_assemblies\Assembly-CSharp_publicized.dll</HintPath>
         </Reference>
         <Reference Include="InControl_publicized">
-          <HintPath>..\..\build\build-depends\publicized_assemblies\InControl_publicized.dll</HintPath>
+            <HintPath>..\..\build\build-depends\publicized_assemblies\InControl_publicized.dll</HintPath>
         </Reference>
         <Reference Include="UnityEngine.CoreModule">
-          <HintPath>..\..\build\build-depends\UnityEngine.CoreModule.dll</HintPath>
+            <HintPath>..\..\build\build-depends\UnityEngine.CoreModule.dll</HintPath>
         </Reference>
         <Reference Include="SlimeTranslationAPI">
-          <HintPath>..\..\build\build-depends\SlimeTranslationAPI.dll</HintPath>
+            <HintPath>..\..\build\build-depends\SlimeTranslationAPI.dll</HintPath>
         </Reference>
         <Reference Include="0Harmony_publicized">
-          <HintPath>..\..\build\build-depends\publicized_assemblies\0Harmony_publicized.dll</HintPath>
+            <HintPath>..\..\build\build-depends\publicized_assemblies\0Harmony_publicized.dll</HintPath>
         </Reference>
         <Reference Include="SRML">
-          <HintPath>..\..\build\build-depends\SRML.dll</HintPath>
+            <HintPath>..\..\build\build-depends\SRML.dll</HintPath>
         </Reference>
     </ItemGroup>
     <ItemGroup>
@@ -90,16 +90,16 @@
         <EmbeddedResource Include="modinfo.json" />
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="Patches\" />
+        <Folder Include="Patches\" />
     </ItemGroup>
     <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
     <ProjectExtensions>
-      <MonoDevelop>
-        <Properties>
-          <Policies>
-            <StandardHeader IncludeInNewFiles="True" Text=" Copyright (c) ${Year} ${CopyrightHolder}&#xA;&#xA; This file is part of KeybindLib.&#xA;&#xA; KeybindLib is free software: you can redistribute it and/or modify&#xA; it under the terms of the GNU General Public License as published by&#xA; the Free Software Foundation, either version 3 of the License, or&#xA; (at your option) any later version.&#xA;&#xA; KeybindLib is distributed in the hope that it will be useful,&#xA; but WITHOUT ANY WARRANTY; without even the implied warranty of&#xA; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the&#xA; GNU General Public License for more details.&#xA;&#xA; You should have received a copy of the GNU General Public License&#xA; along with KeybindLib.  If not, see &lt;http://www.gnu.org/licenses/&gt;." />
-          </Policies>
-        </Properties>
-      </MonoDevelop>
+        <MonoDevelop>
+            <Properties>
+                <Policies>
+                    <StandardHeader IncludeInNewFiles="True" Text=" Copyright (c) ${Year} ${CopyrightHolder}&#xA;&#xA; This file is part of KeybindLib.&#xA;&#xA; KeybindLib is free software: you can redistribute it and/or modify&#xA; it under the terms of the GNU General Public License as published by&#xA; the Free Software Foundation, either version 3 of the License, or&#xA; (at your option) any later version.&#xA;&#xA; KeybindLib is distributed in the hope that it will be useful,&#xA; but WITHOUT ANY WARRANTY; without even the implied warranty of&#xA; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the&#xA; GNU General Public License for more details.&#xA;&#xA; You should have received a copy of the GNU General Public License&#xA; along with KeybindLib.  If not, see &lt;http://www.gnu.org/licenses/&gt;." />
+                </Policies>
+            </Properties>
+        </MonoDevelop>
     </ProjectExtensions>
 </Project>
