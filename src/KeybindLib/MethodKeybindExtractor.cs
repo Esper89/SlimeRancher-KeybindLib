@@ -32,9 +32,11 @@ namespace KeybindLib
         static MethodKeybindExtractor() { } // beforefieldinit
 
         /// <summary> The set of all valid vanilla keybind names. </summary>
-        /// <remarks> Mutating this <see cref="HashSet{String}"/> has no effect. Includes <seealso cref="Keybind.BEGINNING_OF_LIST"/>. </remarks>
+        /// <remarks> Mutating this object has no effect. Includes <seealso cref="Keybind.BEGINNING_OF_LIST"/>. </remarks>
         public static HashSet<string> VanillaKeybinds
             => new HashSet<string>(MethodKeybindExtractor._keybinds); // Duplicate the set to prevent tampering.
+
+        // Typical vanilla keybind list:
 
         /* key.forward
          * key.left

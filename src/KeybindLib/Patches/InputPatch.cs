@@ -194,13 +194,17 @@ namespace KeybindLib.Patches
 
             foreach (Keybind keybind in keybinds)
             {
-                if (instance is GamepadPanel)
+                if (instance is OptionsUI)
                 {
-                    ((GamepadPanel)instance).CreateGamepadBindingLine(keybind.Name, keybind.Action);
-                }
-                else if (instance is OptionsUI)
-                {
+                    keybind.RegisterTranslations();
+
                     ((OptionsUI)instance).CreateKeyBindingLine(keybind.Name, keybind.Action);
+                }
+                else if (instance is GamepadPanel)
+                {
+                    // Translations are registered only once.
+
+                    ((GamepadPanel)instance).CreateGamepadBindingLine(keybind.Name, keybind.Action);
                 }
                 else
                 {

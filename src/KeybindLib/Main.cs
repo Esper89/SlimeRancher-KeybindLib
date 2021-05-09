@@ -15,11 +15,8 @@
 //  You should have received a copy of the GNU General Public License
 //  along with KeybindLib.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.ComponentModel;
 using SRML;
-
-// TODO Translations.
 
 namespace KeybindLib
 {

@@ -15,48 +15,76 @@
 //  You should have received a copy of the GNU General Public License
 //  along with KeybindLib.  If not, see <http://www.gnu.org/licenses/>.
 
+using System.Collections.Generic;
 using InControl;
 using KeybindLib;
+using static MessageDirector;
+using Button = InControl.InputControlType;
 
 namespace TestMod
 {
     public static class Keybinds // A class for holding keybinds.
     {
-        public static Keybind Test { get; } // A property for each keybind.
-            = new Keybind(
-                defaultBindings: new Binding[] { Key.T },
-                name: "key.test",
-                comesBefore: "key.reportissue"
+        public static Keybind Test { get; }                     // A property to hold this keybind.
+            = new Keybind(                                      // Create a new keybind.
+                name: "key.test",                               // The name of this keybind, must start with "key.".
+                defaultBindings: new Binding[]                  // This keybind's default bindings, in the order they should be applied. Optional.
+                {
+                    Key.T                                       // Can be of type `InControl.Key`, `InControl.Mouse`, or `InControl.InputControlType`.
+                },
+                comesBefore: "key.reportissue",                 // The key that this keybind should come immidiately before in the list. Can be `Keybind.BEGINNING_OF_LIST` for the start of the list. Optional.
+                translations: new Dictionary<Lang, string>      // This keybind's translations. Optional.
+                {
+                    [Lang.EN] = "Test",                         // If the Translation API isn't installed, only `Lang.EN` will be used.
+                    [Lang.ES] = "Probar",
+                }
             );
 
         public static Keybind Jest { get; }
             = new Keybind(
-                defaultBindings: new Binding[] { Key.J }, // The keys that it should be bound to by default.
-                name: "key.jest"
-            ); // comesBefore is optional; omitting it will set it to null.
+                name: "key.jest",
+                defaultBindings: new Binding[] { Key.J, Mouse.Button9 },
+                translations: new Dictionary<Lang, string>
+                {
+                    [Lang.EN] = "Jest",
+                    [Lang.ES] = "Bromear",
+                    [Lang.FR] = "Plaisanter"
+                }
+            );
 
         public static Keybind Kest { get; }
             = new Keybind(
-                defaultBindings: new Binding[] { Key.K },
-                name: "key.kest", // The name of the keybind; should start with "key".
+                name: "key.kest",
+                defaultBindings: new Binding[] { Key.K, Key.L },
                 comesBefore: "key.screenshot"
             );
 
         public static Keybind Vest { get; }
             = new Keybind(
-                defaultBindings: new Binding[] { Key.V },
                 name: "key.vest",
-                comesBefore: "key.left" // The name of the key that this keybind should come before. Indicates this keybind's position in the list.
+                defaultBindings: new Binding[] { Key.V },
+                comesBefore: "key.left",
+                translations: new Dictionary<Lang, string>
+                {
+                    [Lang.EN] = "Vest",
+                    [Lang.FR] = "Gilet"
+                }
             );
 
         public static Keybind Nest { get; }
             = new Keybind(
-                defaultBindings: new Binding[] { Key.N },
                 name: "key.nest",
-                comesBefore: Keybind.BEGINNING_OF_LIST // This can be `Keybind.BEGINNING_OF_LIST` for the beginning of the list, or you can leave it as null for the end of the list.
+                defaultBindings: new Binding[] { Key.N, Button.Action7 },
+                comesBefore: Keybind.BEGINNING_OF_LIST,
+                translations: new Dictionary<Lang, string>
+                {
+                    [Lang.EN] = "Nest",
+                    [Lang.ES] = "Nido",
+                    [Lang.KO] = "둥지"
+                }
             );
 
-        internal static void Register() // A method for registering all your keybinds. Call during PreLoad.
+        internal static void Register() // A method for registering all keybinds. Must be called during PreLoad.
         {
             KeybindRegistry.Register(new[]
             {
