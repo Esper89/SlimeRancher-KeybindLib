@@ -3,7 +3,7 @@
 # usage:
 # $ build/autosetup.sh [SLIMERANCHER INSTALL PATH]
 
-# requires mono
+# requires: mono
 
 cp "$*"/SlimeRancher_Data/Managed/* build/build-depends
 cp "$*"/SRML/Libs/* build/build-depends

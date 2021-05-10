@@ -64,12 +64,7 @@ build/autosetup.sh ~/.steam/steamapps/common/Slime Rancher
 
 Then, you can build the actual project:
 ```sh
-pushd src
-nuget restore
-mdtool build -c:Testing -t:Build
-mdtool build -c:Testing -t:Clean
-mdtool build -c:Release -t:Build
-popd
+build/build.sh
 ```
 
 And the result will be in `build/target`!

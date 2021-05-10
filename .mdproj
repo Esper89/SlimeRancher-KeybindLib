@@ -17,5 +17,6 @@
     <None Include=".gitignore" />
     <None Include="build\mods-dir" />
     <None Include="build\autosetup.sh" />
+    <None Include="build\build.sh" />
   </ItemGroup>
 </Project>

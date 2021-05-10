@@ -39,13 +39,7 @@ jobs:
     - name: Publicize assemblies
       run: build/publicizer.sh
     - name: Build
-      run: |
-        pushd src
-        nuget restore
-        mdtool build -c:Testing -t:Build
-        mdtool build -c:Testing -t:Clean
-        mdtool build -c:Release -t:Build
-        popd
+      run: build/build.sh
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
