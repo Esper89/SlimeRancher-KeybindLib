@@ -33,7 +33,8 @@ jobs:
     - name: Build
       run: |
         pushd src
-        mdtool build -c:Release -t:Clean
+        mdtool build -c:Testing -t:Build
+        mdtool build -c:Testing -t:Clean
         mdtool build -c:Release -t:Build
         popd
     - name: Upload artifact

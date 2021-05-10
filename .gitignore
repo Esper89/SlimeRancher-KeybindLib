@@ -4,6 +4,9 @@ build/target
 # Build depends
 build/build-depends/*
 
+# SRML mods directory
+build/mods-dir
+
 # Ouput and caching
 bin
 obj
