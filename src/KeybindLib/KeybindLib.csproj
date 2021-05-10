@@ -49,14 +49,14 @@
         <Reference Include="UnityEngine.CoreModule">
             <HintPath>..\..\build\build-depends\UnityEngine.CoreModule.dll</HintPath>
         </Reference>
-        <Reference Include="SlimeTranslationAPI">
-            <HintPath>..\..\build\build-depends\SlimeTranslationAPI.dll</HintPath>
-        </Reference>
         <Reference Include="0Harmony_publicized">
             <HintPath>..\..\build\build-depends\publicized_assemblies\0Harmony_publicized.dll</HintPath>
         </Reference>
         <Reference Include="SRML">
             <HintPath>..\..\build\build-depends\SRML.dll</HintPath>
+        </Reference>
+        <Reference Include="SlimeTranslationAPI.refasm">
+            <HintPath>..\..\build\refasm\SlimeTranslationAPI.refasm.dll</HintPath>
         </Reference>
     </ItemGroup>
     <ItemGroup>
