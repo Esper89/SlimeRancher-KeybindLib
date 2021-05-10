@@ -20,14 +20,14 @@ using SRML;
 
 namespace KeybindLib
 {
-    /// <summary> <see cref="KeybindLib"/>'s entry point. </summary>
+    /// <summary> This mod's entry point. </summary>
     /// <seealso cref="Keybind"/>
     /// <seealso cref="KeybindRegistry"/>
     [EditorBrowsable(EditorBrowsableState.Never)]
     public class Main : ModEntryPoint
     {
         /// <summary> Applies all patches. Keybinds must be registered before this is called. </summary>
-        /// <remarks> Add <see cref="KeybindLib"/> to your mod's "load_after" list to ensure this is called after your keybinds are registered. </remarks>
+        /// <remarks> Add "keybindlib" to your mod's "load_after" list to ensure this is called after your keybinds are registered. </remarks>
         /// <seealso cref="KeybindRegistry"/>
         public override void PreLoad()
         {

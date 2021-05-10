@@ -138,7 +138,7 @@ namespace KeybindLib
             public Keybind Keybind { get; }
         }
 
-        /// <summary> An exception thrown when a <see cref="KeybindLib.Keybind"/> is registered after <see cref="KeybindLib"/> has been PreLoaded. </summary>
+        /// <summary> An exception thrown when a <see cref="KeybindLib.Keybind"/> is registered after this mod has been PreLoaded. </summary>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         public sealed class KeybindRegisteredTooLateException : InvalidOperationException
         {
