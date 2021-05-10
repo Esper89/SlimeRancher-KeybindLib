@@ -4,6 +4,13 @@ build/target
 # Build depends
 build/build-depends/*
 
+# Forbid assemblies
+*.dll
+*.exe
+
+# Allow reference assemblies
+!*.refasm.dll
+
 # SRML mods directory
 build/mods-dir
 
