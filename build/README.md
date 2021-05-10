@@ -31,7 +31,7 @@ If you just want a bleeding-edge version of KeybindLib, you can download one fro
 
  #### For Debugging
 
- - Create a new file in `build` called `mods-dir` Make sure it's actually called `mods-dir` and not `mods-dir.txt`.
+ - Create a new file in `build` called `mods-dir.`. Putting the `.` on the end will make sure it's actually called `mods-dir` and not `mods-dir.txt`.
 
  - Type the location of your SRML Mods folder into this file. For example:
  ```
