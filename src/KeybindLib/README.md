@@ -384,7 +384,7 @@ KeybindLib.KeybindRegistry
 
 ##### Summary
 
-An exception thrown when a [Keybind](#T-KeybindLib-Keybind 'KeybindLib.Keybind') is registered after [](#N-KeybindLib 'KeybindLib') has been PreLoaded.
+An exception thrown when a [Keybind](#T-KeybindLib-Keybind 'KeybindLib.Keybind') is registered after this mod has been PreLoaded.
 
 <a name='P-KeybindLib-KeybindRegistry-KeybindRegisteredTooLateException-Keybind'></a>
 ### Keybind `property`
@@ -462,7 +462,7 @@ KeybindLib
 
 ##### Summary
 
-[](#N-KeybindLib 'KeybindLib')'s entry point.
+This mod's entry point.
 
 ##### See Also
 
@@ -482,7 +482,7 @@ This method has no parameters.
 
 ##### Remarks
 
-Add [](#N-KeybindLib 'KeybindLib') to your mod's "load_after" list to ensure this is called after your keybinds are registered.
+Add "keybindlib" to your mod's "load_after" list to ensure this is called after your keybinds are registered.
 
 ##### See Also
 
