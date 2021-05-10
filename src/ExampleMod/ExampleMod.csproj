@@ -5,8 +5,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{782272B5-7B61-4840-ABF2-9E53B3D8A80F}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>TestMod</RootNamespace>
-    <AssemblyName>TestMod</AssemblyName>
+    <RootNamespace>ExampleMod</RootNamespace>
+    <AssemblyName>KeybindLib.ExampleMod</AssemblyName>
     <Nullable>enable</Nullable>
     <NoWarn>CS0628</NoWarn>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>

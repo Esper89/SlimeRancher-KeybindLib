@@ -1,7 +1,7 @@
 ﻿using System;
 using SRML;
 
-namespace TestMod
+namespace ExampleMod
 {
     public class Main : ModEntryPoint // This mod's entry point.
     {

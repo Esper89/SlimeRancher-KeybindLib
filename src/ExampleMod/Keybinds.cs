@@ -4,7 +4,7 @@ using KeybindLib;
 using static MessageDirector;
 using Button = InControl.InputControlType;
 
-namespace TestMod
+namespace ExampleMod
 {
     public static class Keybinds // A class for holding keybinds.
     {

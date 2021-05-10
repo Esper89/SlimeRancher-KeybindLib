@@ -103,10 +103,10 @@
   <Target Name="CopyOutputToTargetDir" AfterTargets="Build" Condition=" '$(Configuration)' == 'Release' ">
     <MakeDir Directories="$(BuildDir)\target" />
     <Copy SourceFiles="$(TargetPath);$(DocumentationFile)" DestinationFolder="$(BuildDir)\target" />
-    <MSBuild Projects="..\TestMod\TestMod.csproj" Targets="Clean" Properties="Configuration=Testing" />
-    <ZipDirectory SourceDirectory="..\TestMod" DestinationFile="$(BuildDir)\target\TestMod.zip" Overwrite="true" />
-    <Copy SourceFiles="$(ProjectDir)\$(OutputPath)\$(AssemblyName).md" DestinationFiles="README.md" />
-    <Copy SourceFiles="README.md" DestinationFiles="$(BuildDir)\target\README.md" />
+    <MSBuild Projects="..\ExampleMod\ExampleMod.csproj" Targets="Clean" Properties="Configuration=Testing" />
+    <ZipDirectory SourceDirectory="..\ExampleMod" DestinationFile="$(BuildDir)\target\ExampleMod.zip" Overwrite="true" />
+    <Copy SourceFiles="$(OutputPath)\$(AssemblyName).md" DestinationFiles="README.md" />
+    <Copy SourceFiles="$(OutputPath)\$(AssemblyName).md" DestinationFolder="$(BuildDir)\target" />
   </Target>
   <Target Name="FullClean" AfterTargets="Clean">
     <ReadLinesFromFile File="$(BuildDir)\mods-dir">

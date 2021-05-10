@@ -1,6 +1,6 @@
 ﻿{
-  "id": "testmod",
-  "name": "TestMod",
+  "id": "keybindlib-examplemod",
+  "name": "KeybindLib Example Mod",
   "version": "0.1",
   "author": "Esper89",
   "description": "An example mod for testing KeybindLib.",

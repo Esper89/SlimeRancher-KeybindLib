@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-[assembly: AssemblyTitle("TestMod")]
+[assembly: AssemblyTitle("KeybindLib.ExampleMod")]
 [assembly: AssemblyCopyright("Esper Thomson")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyVersion("0.1.*")]
