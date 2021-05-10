@@ -42,13 +42,13 @@ You can now compile KeybindLib in the `Debug` configuration.
 
 ## Linux
 
-First, make sure you have Mono and MonoDevelop installed. If you don't, run these commands:
+First, make sure you have Mono, MonoDevelop, git, and NuGet installed. If you don't, run these commands:
 ```sh
 sudo apt install -y apt-transport-https dirmngr
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
 echo "deb https://download.mono-project.com/repo/ubuntu vs-bionic main" | sudo tee /etc/apt/sources.list.d/mono-official-vs.list
 sudo apt update
-sudo apt install -y git mono-complete monodevelop
+sudo apt install -y git mono-complete monodevelop nuget
 ```
 
 Then, clone the repo:
@@ -65,6 +65,7 @@ build/autosetup.sh ~/.steam/steamapps/common/Slime Rancher
 Then, you can build the actual project:
 ```sh
 pushd src
+nuget restore
 mdtool build -c:Testing -t:Build
 mdtool build -c:Testing -t:Clean
 mdtool build -c:Release -t:Build

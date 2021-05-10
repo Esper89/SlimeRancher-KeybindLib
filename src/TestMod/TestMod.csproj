@@ -66,14 +66,17 @@
     </ItemGroup>
     <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
     <!-- -->
+    <PropertyGroup>
+        <BuildDir>..\..\build</BuildDir>
+    </PropertyGroup>
     <Target Name="CopyOutputToModsDir" AfterTargets="Build" Condition=" '$(Configuration)' == 'Debug' ">
-        <ReadLinesFromFile File="..\..\build\mods-dir">
+        <ReadLinesFromFile File="$(BuildDir)\mods-dir">
             <Output TaskParameter="Lines" PropertyName="ModsDir" />
         </ReadLinesFromFile>
         <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ModsDir)" />
     </Target>
     <Target Name="FullClean" AfterTargets="Clean">
-        <ReadLinesFromFile File="..\..\build\mods-dir">
+        <ReadLinesFromFile File="$(BuildDir)\mods-dir">
             <Output TaskParameter="Lines" PropertyName="ModsDir" />
         </ReadLinesFromFile>
         <RemoveDir Directories="..\$(ProjectName)\bin;..\$(ProjectName)\obj" />
