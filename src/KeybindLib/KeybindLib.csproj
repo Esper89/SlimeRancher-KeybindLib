@@ -1,121 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <PropertyGroup>
-        <Configuration Condition=" '$(Configuration)' == '' ">Testing</Configuration>
-        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-        <ProjectGuid>{8F68A793-FA37-4159-82FA-088D28190AC5}</ProjectGuid>
-        <OutputType>Library</OutputType>
-        <RootNamespace>KeybindLib</RootNamespace>
-        <AssemblyName>KeybindLib</AssemblyName>
-        <Nullable>enable</Nullable>
-        <NoWarn>IDE0002;CS0628</NoWarn>
-        <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <LangVersion>8.0</LangVersion>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-        <DebugSymbols>true</DebugSymbols>
-        <DebugType>embedded</DebugType>
-        <Optimize>false</Optimize>
-        <OutputPath>bin\Debug</OutputPath>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-        <ConsolePause>false</ConsolePause>
-        <DefineConstants>DEBUG;</DefineConstants>
-    </PropertyGroup>
-    <PropertyGroup Condition=" ('$(Configuration)' == 'Release') Or ('$(Configuration)' == 'Testing') ">
-        <Optimize>true</Optimize>
-        <OutputPath>bin\Release</OutputPath>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
-        <ConsolePause>false</ConsolePause>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-        <DefineConstants>RELEASE;</DefineConstants>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)' == 'Testing' ">
-        <DefineConstants>TESTING;</DefineConstants>
-    </PropertyGroup>
-    <ItemGroup>
-        <Reference Include="System" />
-        <Reference Include="Assembly-CSharp_publicized">
-            <HintPath>..\..\build\build-depends\publicized_assemblies\Assembly-CSharp_publicized.dll</HintPath>
-        </Reference>
-        <Reference Include="InControl_publicized">
-            <HintPath>..\..\build\build-depends\publicized_assemblies\InControl_publicized.dll</HintPath>
-        </Reference>
-        <Reference Include="UnityEngine.CoreModule">
-            <HintPath>..\..\build\build-depends\UnityEngine.CoreModule.dll</HintPath>
-        </Reference>
-        <Reference Include="0Harmony_publicized">
-            <HintPath>..\..\build\build-depends\publicized_assemblies\0Harmony_publicized.dll</HintPath>
-        </Reference>
-        <Reference Include="SRML">
-            <HintPath>..\..\build\build-depends\SRML.dll</HintPath>
-        </Reference>
-        <Reference Include="SlimeTranslationAPI.refasm">
-            <HintPath>..\..\build\refasm\SlimeTranslationAPI.refasm.dll</HintPath>
-        </Reference>
-    </ItemGroup>
-    <ItemGroup>
-        <Compile Include="Properties\AssemblyInfo.cs" />
-        <Compile Include="Main.cs" />
-        <Compile Include="Patches\PlayerActionsPatch.cs" />
-        <Compile Include="Keybind.cs" />
-        <Compile Include="Bind.cs" />
-        <Compile Include="KeybindRegistry.cs" />
-        <Compile Include="Patches\InputPatch.cs" />
-        <Compile Include="Log.cs" />
-        <Compile Include="MethodKeybindExtractor.cs" />
-    </ItemGroup>
-    <ItemGroup>
-        <EmbeddedResource Include="modinfo.json" />
-    </ItemGroup>
-    <ItemGroup>
-        <Folder Include="Patches\" />
-    </ItemGroup>
-    <ItemGroup>
-        <None Include="packages.config" />
-    </ItemGroup>
-    <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-    <Import Project="..\packages\Vsxmd.1.4.5\build\Vsxmd.targets" />
-    <ProjectExtensions>
-        <MonoDevelop>
-            <Properties>
-                <Policies>
-                    <StandardHeader IncludeInNewFiles="True" Text=" Copyright (c) ${Year} ${CopyrightHolder}&#xA;&#xA; This file is part of KeybindLib.&#xA;&#xA; KeybindLib is free software: you can redistribute it and/or modify&#xA; it under the terms of the GNU General Public License as published by&#xA; the Free Software Foundation, either version 3 of the License, or&#xA; (at your option) any later version.&#xA;&#xA; KeybindLib is distributed in the hope that it will be useful,&#xA; but WITHOUT ANY WARRANTY; without even the implied warranty of&#xA; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the&#xA; GNU General Public License for more details.&#xA;&#xA; You should have received a copy of the GNU General Public License&#xA; along with KeybindLib.  If not, see &lt;http://www.gnu.org/licenses/&gt;." />
-                </Policies>
-            </Properties>
-        </MonoDevelop>
-    </ProjectExtensions>
-    <!-- -->
-    <PropertyGroup>
-        <BuildDir>..\..\build</BuildDir>
-    </PropertyGroup>
-    <Target Name="CopyOutputToModsDir" AfterTargets="Build" Condition=" '$(Configuration)' == 'Debug' ">
-        <ReadLinesFromFile File="$(BuildDir)\mods-dir">
-            <Output TaskParameter="Lines" PropertyName="ModsDir" />
-        </ReadLinesFromFile>
-        <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ModsDir)" />
-    </Target>
-    <Target Name="CopyOutputToTargetDir" AfterTargets="Build" Condition=" '$(Configuration)' == 'Release' ">
-        <MakeDir Directories="$(BuildDir)\target" />
-        <Copy SourceFiles="$(TargetPath);$(DocumentationFile)" DestinationFolder="$(BuildDir)\target" />
-        <MSBuild Projects="..\TestMod\TestMod.csproj" Targets="Clean" Properties="Configuration=Testing" />
-        <ZipDirectory SourceDirectory="..\TestMod" DestinationFile="$(BuildDir)\target\TestMod.zip" Overwrite="true" />
-        <Copy SourceFiles="$(ProjectDir)\$(OutputPath)\$(AssemblyName).md" DestinationFiles="README.md" />
-        <Copy SourceFiles="README.md" DestinationFiles="$(BuildDir)\target\README.md" />
-    </Target>
-    <Target Name="FullClean" AfterTargets="Clean">
-        <ReadLinesFromFile File="$(BuildDir)\mods-dir">
-            <Output TaskParameter="Lines" PropertyName="ModsDir" />
-        </ReadLinesFromFile>
-        <RemoveDir Directories="$(ProjectDir)\bin;$(ProjectDir)\obj" />
-        <Delete Files="$(ModsDir)\$(TargetFileName)" Condition=" '$(Configuration)' == 'Debug' " />
-        <RemoveDir Directories="$(BuildDir)\target" Condition=" '$(Configuration)' == 'Release' " />
-        <Delete Files="$(ProjectDir)\$(OutputPath)\$(AssemblyName).md" Condition=" '$(Configuration)' == 'Release' " />
-    </Target>
-    <!-- -->
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Testing</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{8F68A793-FA37-4159-82FA-088D28190AC5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>KeybindLib</RootNamespace>
+    <AssemblyName>KeybindLib</AssemblyName>
+    <Nullable>enable</Nullable>
+    <NoWarn>CS0628</NoWarn>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>embedded</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <DefineConstants>DEBUG</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" ('$(Configuration)' == 'Release') Or ('$(Configuration)' == 'Testing') ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DocumentationFile>$(OutputPath)\$(AssemblyName).xml</DocumentationFile>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DefineConstants>RELEASE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Testing' ">
+    <DefineConstants>TESTING</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="Assembly-CSharp_publicized">
+      <HintPath>..\..\build\build-depends\publicized_assemblies\Assembly-CSharp_publicized.dll</HintPath>
+    </Reference>
+    <Reference Include="InControl_publicized">
+      <HintPath>..\..\build\build-depends\publicized_assemblies\InControl_publicized.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>..\..\build\build-depends\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="0Harmony_publicized">
+      <HintPath>..\..\build\build-depends\publicized_assemblies\0Harmony_publicized.dll</HintPath>
+    </Reference>
+    <Reference Include="SRML">
+      <HintPath>..\..\build\build-depends\SRML.dll</HintPath>
+    </Reference>
+    <Reference Include="SlimeTranslationAPI.refasm">
+      <HintPath>..\..\build\refasm\SlimeTranslationAPI.refasm.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Main.cs" />
+    <Compile Include="Patches\PlayerActionsPatch.cs" />
+    <Compile Include="Keybind.cs" />
+    <Compile Include="Bind.cs" />
+    <Compile Include="KeybindRegistry.cs" />
+    <Compile Include="Patches\InputPatch.cs" />
+    <Compile Include="Log.cs" />
+    <Compile Include="MethodKeybindExtractor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="modinfo.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Patches\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Vsxmd.1.4.5\build\Vsxmd.targets" />
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <Policies>
+          <StandardHeader IncludeInNewFiles="True" Text=" Copyright (c) ${Year} ${CopyrightHolder}&#xA;&#xA; This file is part of KeybindLib.&#xA;&#xA; KeybindLib is free software: you can redistribute it and/or modify&#xA; it under the terms of the GNU General Public License as published by&#xA; the Free Software Foundation, either version 3 of the License, or&#xA; (at your option) any later version.&#xA;&#xA; KeybindLib is distributed in the hope that it will be useful,&#xA; but WITHOUT ANY WARRANTY; without even the implied warranty of&#xA; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the&#xA; GNU General Public License for more details.&#xA;&#xA; You should have received a copy of the GNU General Public License&#xA; along with KeybindLib.  If not, see &lt;http://www.gnu.org/licenses/&gt;." />
+        </Policies>
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
+  <!-- -->
+  <PropertyGroup>
+    <BuildDir>..\..\build</BuildDir>
+  </PropertyGroup>
+  <Target Name="CopyOutputToModsDir" AfterTargets="Build" Condition=" '$(Configuration)' == 'Debug' ">
+    <ReadLinesFromFile File="$(BuildDir)\mods-dir">
+      <Output TaskParameter="Lines" PropertyName="ModsDir" />
+    </ReadLinesFromFile>
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ModsDir)" />
+  </Target>
+  <Target Name="CopyOutputToTargetDir" AfterTargets="Build" Condition=" '$(Configuration)' == 'Release' ">
+    <MakeDir Directories="$(BuildDir)\target" />
+    <Copy SourceFiles="$(TargetPath);$(DocumentationFile)" DestinationFolder="$(BuildDir)\target" />
+    <MSBuild Projects="..\TestMod\TestMod.csproj" Targets="Clean" Properties="Configuration=Testing" />
+    <ZipDirectory SourceDirectory="..\TestMod" DestinationFile="$(BuildDir)\target\TestMod.zip" Overwrite="true" />
+    <Copy SourceFiles="$(ProjectDir)\$(OutputPath)\$(AssemblyName).md" DestinationFiles="README.md" />
+    <Copy SourceFiles="README.md" DestinationFiles="$(BuildDir)\target\README.md" />
+  </Target>
+  <Target Name="FullClean" AfterTargets="Clean">
+    <ReadLinesFromFile File="$(BuildDir)\mods-dir">
+      <Output TaskParameter="Lines" PropertyName="ModsDir" />
+    </ReadLinesFromFile>
+    <RemoveDir Directories="$(ProjectDir)\bin;$(ProjectDir)\obj" />
+    <Delete Files="$(ModsDir)\$(TargetFileName)" Condition=" '$(Configuration)' == 'Debug' " />
+    <RemoveDir Directories="$(BuildDir)\target" Condition=" '$(Configuration)' == 'Release' " />
+    <Delete Files="$(ProjectDir)\$(OutputPath)\$(AssemblyName).md" Condition=" '$(Configuration)' == 'Release' " />
+  </Target>
+  <!-- -->
 </Project>

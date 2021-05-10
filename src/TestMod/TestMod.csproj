@@ -1,86 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-    <PropertyGroup>
-        <Configuration Condition=" '$(Configuration)' == '' ">Testing</Configuration>
-        <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-        <ProjectGuid>{782272B5-7B61-4840-ABF2-9E53B3D8A80F}</ProjectGuid>
-        <OutputType>Library</OutputType>
-        <RootNamespace>TestMod</RootNamespace>
-        <AssemblyName>TestMod</AssemblyName>
-        <Nullable>enable</Nullable>
-        <NoWarn>IDE0002;CS0628</NoWarn>
-        <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <LangVersion>8.0</LangVersion>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-        <DebugSymbols>true</DebugSymbols>
-        <DebugType>embedded</DebugType>
-        <Optimize>false</Optimize>
-        <OutputPath>bin\Debug</OutputPath>
-        <DefineConstants>DEBUG;</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-        <ConsolePause>false</ConsolePause>
-    </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Testing|AnyCPU' ">
-        <Optimize>true</Optimize>
-        <OutputPath>bin\Testing</OutputPath>
-        <DefineConstants>TESTING;</DefineConstants>
-        <ErrorReport>prompt</ErrorReport>
-        <WarningLevel>4</WarningLevel>
-        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <ConsolePause>false</ConsolePause>
-    </PropertyGroup>
-    <ItemGroup>
-        <Reference Include="System" />
-        <Reference Include="Assembly-CSharp_publicized">
-            <HintPath>..\..\build\build-depends\publicized_assemblies\Assembly-CSharp_publicized.dll</HintPath>
-        </Reference>
-        <Reference Include="InControl_publicized">
-            <HintPath>..\..\build\build-depends\publicized_assemblies\InControl_publicized.dll</HintPath>
-        </Reference>
-        <Reference Include="0Harmony">
-            <HintPath>..\..\build\build-depends\0Harmony.dll</HintPath>
-        </Reference>
-        <Reference Include="SRML">
-            <HintPath>..\..\build\build-depends\SRML.dll</HintPath>
-        </Reference>
-    </ItemGroup>
-    <ItemGroup>
-        <Compile Include="Main.cs" />
-        <Compile Include="Properties\AssemblyInfo.cs" />
-        <Compile Include="Keybinds.cs" />
-    </ItemGroup>
-    <ItemGroup>
-        <EmbeddedResource Include="modinfo.json" />
-    </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\KeybindLib\KeybindLib.csproj">
-            <Project>{8F68A793-FA37-4159-82FA-088D28190AC5}</Project>
-            <Name>KeybindLib</Name>
-        </ProjectReference>
-    </ItemGroup>
-    <ItemGroup>
-        <None Include="README.md" />
-    </ItemGroup>
-    <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-    <!-- -->
-    <PropertyGroup>
-        <BuildDir>..\..\build</BuildDir>
-    </PropertyGroup>
-    <Target Name="CopyOutputToModsDir" AfterTargets="Build" Condition=" '$(Configuration)' == 'Debug' ">
-        <ReadLinesFromFile File="$(BuildDir)\mods-dir">
-            <Output TaskParameter="Lines" PropertyName="ModsDir" />
-        </ReadLinesFromFile>
-        <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ModsDir)" />
-    </Target>
-    <Target Name="FullClean" AfterTargets="Clean">
-        <ReadLinesFromFile File="$(BuildDir)\mods-dir">
-            <Output TaskParameter="Lines" PropertyName="ModsDir" />
-        </ReadLinesFromFile>
-        <RemoveDir Directories="..\$(ProjectName)\bin;..\$(ProjectName)\obj" />
-        <Delete Files="$(ModsDir)\$(TargetFileName)" Condition=" '$(Configuration)' == 'Debug' " />
-    </Target>
-    <!-- -->
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Testing</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{782272B5-7B61-4840-ABF2-9E53B3D8A80F}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>TestMod</RootNamespace>
+    <AssemblyName>TestMod</AssemblyName>
+    <Nullable>enable</Nullable>
+    <NoWarn>CS0628</NoWarn>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>embedded</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Testing|AnyCPU' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Testing</OutputPath>
+    <DefineConstants>TESTING</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="Assembly-CSharp_publicized">
+      <HintPath>..\..\build\build-depends\publicized_assemblies\Assembly-CSharp_publicized.dll</HintPath>
+    </Reference>
+    <Reference Include="InControl_publicized">
+      <HintPath>..\..\build\build-depends\publicized_assemblies\InControl_publicized.dll</HintPath>
+    </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>..\..\build\build-depends\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="SRML">
+      <HintPath>..\..\build\build-depends\SRML.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Main.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Keybinds.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="modinfo.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\KeybindLib\KeybindLib.csproj">
+      <Project>{8F68A793-FA37-4159-82FA-088D28190AC5}</Project>
+      <Name>KeybindLib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- -->
+  <PropertyGroup>
+    <BuildDir>..\..\build</BuildDir>
+  </PropertyGroup>
+  <Target Name="CopyOutputToModsDir" AfterTargets="Build" Condition=" '$(Configuration)' == 'Debug' ">
+    <ReadLinesFromFile File="$(BuildDir)\mods-dir">
+      <Output TaskParameter="Lines" PropertyName="ModsDir" />
+    </ReadLinesFromFile>
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(ModsDir)" />
+  </Target>
+  <Target Name="FullClean" AfterTargets="Clean">
+    <ReadLinesFromFile File="$(BuildDir)\mods-dir">
+      <Output TaskParameter="Lines" PropertyName="ModsDir" />
+    </ReadLinesFromFile>
+    <RemoveDir Directories="..\$(ProjectName)\bin;..\$(ProjectName)\obj" />
+    <Delete Files="$(ModsDir)\$(TargetFileName)" Condition=" '$(Configuration)' == 'Debug' " />
+  </Target>
+  <!-- -->
 </Project>
