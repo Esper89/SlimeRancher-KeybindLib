@@ -11,6 +11,9 @@ build/mods-dir
 bin
 obj
 
+# Blobs
+*.blob
+
 ### Automatically Generated ###
 
 # globs

@@ -11,7 +11,7 @@ namespace TestMod
         public static Keybind Test { get; }                     // A property to hold this keybind.
             = new Keybind(                                      // Create a new keybind.
                 name: "key.test",                               // The name of this keybind, must start with "key.".
-                defaultBindings: new Binding[]                  // This keybind's default bindings, in the order they should be applied. Optional.
+                defaultBindings: new Bind[]                     // This keybind's default bindings, in the order they should be applied. Optional.
                 {
                     Key.T                                       // Can be of type `InControl.Key`, `InControl.Mouse`, or `InControl.InputControlType`.
                 },
@@ -26,7 +26,11 @@ namespace TestMod
         public static Keybind Jest { get; }
             = new Keybind(
                 name: "key.jest",
-                defaultBindings: new Binding[] { Key.J, Mouse.Button9 },
+                defaultBindings: new Bind[]
+                {
+                    Key.J,
+                    Mouse.Button9
+                },
                 translations: new Dictionary<Lang, string>
                 {
                     [Lang.EN] = "Jest",
@@ -38,14 +42,21 @@ namespace TestMod
         public static Keybind Kest { get; }
             = new Keybind(
                 name: "key.kest",
-                defaultBindings: new Binding[] { Key.K, Key.L },
+                defaultBindings: new Bind[]
+                {
+                    Key.K,
+                    Key.L
+                },
                 comesBefore: "key.screenshot"
             );
 
         public static Keybind Vest { get; }
             = new Keybind(
                 name: "key.vest",
-                defaultBindings: new Binding[] { Key.V },
+                defaultBindings: new Bind[]
+                {
+                    Key.V
+                },
                 comesBefore: "key.left",
                 translations: new Dictionary<Lang, string>
                 {
@@ -57,7 +68,11 @@ namespace TestMod
         public static Keybind Nest { get; }
             = new Keybind(
                 name: "key.nest",
-                defaultBindings: new Binding[] { Key.N, Button.Action7 },
+                defaultBindings: new Bind[]
+                {
+                    Key.N,
+                    Button.Action7
+                },
                 comesBefore: Keybind.BEGINNING_OF_LIST,
                 translations: new Dictionary<Lang, string>
                 {

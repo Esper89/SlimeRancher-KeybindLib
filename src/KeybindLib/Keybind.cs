@@ -39,12 +39,12 @@ namespace KeybindLib
         /// <param name="translations"> The translations that apply to this instance. </param>
         public Keybind(
             string name,
-            Binding[]? defaultBindings = null,
+            Bind[]? defaultBindings = null,
             string? comesBefore = null,
             Dictionary<Lang, string>? translations = null
         )
         {
-            this.DefaultBindings = defaultBindings ?? new Binding[] { };
+            this.DefaultBindings = defaultBindings ?? new Bind[] { };
             this.Name = name + Keybind.DEBUG_SUFFIX;
             this.ComesBefore = comesBefore;
             this.Translations = translations ?? new Dictionary<Lang, string> { };
@@ -58,11 +58,11 @@ namespace KeybindLib
         public Keybind(
             string name,
             string? translation,
-            Binding[]? defaultBindings = null,
+            Bind[]? defaultBindings = null,
             string? comesBefore = null
         )
         {
-            this.DefaultBindings = defaultBindings ?? new Binding[] { };
+            this.DefaultBindings = defaultBindings ?? new Bind[] { };
             this.Name = name + Keybind.DEBUG_SUFFIX;
             this.ComesBefore = comesBefore;
             this.Translations = new Dictionary<Lang, string>
@@ -77,8 +77,8 @@ namespace KeybindLib
         /// <remarks> Must start with "key.". </remarks>
         public virtual string Name { get; }
 
-        /// <summary> The default <see cref="Binding"/>s for this instance. </summary>
-        public virtual Binding[] DefaultBindings { get; }
+        /// <summary> The default <see cref="Bind"/>s for this instance. </summary>
+        public virtual Bind[] DefaultBindings { get; }
 
         /// <summary> The name of the vanilla keybind that should come after this instance. </summary>
         /// <remarks> Indicates where in the list of keybinds this one should go. </remarks>
@@ -123,9 +123,9 @@ namespace KeybindLib
         /// <param name="action"> The <see cref="PlayerAction"/> to bind to. </param>
         protected virtual void BindAllDefaultsTo(PlayerAction action)
         {
-            foreach (Binding binding in this.DefaultBindings)
+            foreach (Bind binding in this.DefaultBindings)
             {
-                binding.BindTo(action);
+                binding.BindDefault(action);
             }
         }
 
