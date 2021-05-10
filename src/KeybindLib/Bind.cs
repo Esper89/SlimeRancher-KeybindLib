@@ -25,6 +25,7 @@ namespace KeybindLib
     public abstract class Bind
     {
         /// <summary> Adds this instance as a default binding for the specified <see cref="PlayerAction"/>. </summary>
+        /// <param name="action"> The <see cref="PlayerAction"/> to bind to. </param>
         protected internal abstract void BindDefault(PlayerAction action);
 
         #region subclasses
@@ -40,6 +41,7 @@ namespace KeybindLib
 
             private readonly Key key;
 
+            /// <inheritdoc/>
             protected internal override void BindDefault(PlayerAction action)
             {
                 action.AddDefaultBinding(this.key);
@@ -57,6 +59,7 @@ namespace KeybindLib
 
             private readonly Button button;
 
+            /// <inheritdoc/>
             protected internal override void BindDefault(PlayerAction action)
             {
                 action.AddDefaultBinding(this.button);
@@ -74,6 +77,7 @@ namespace KeybindLib
 
             private readonly Mouse mouse;
 
+            /// <inheritdoc/>
             protected internal override void BindDefault(PlayerAction action)
             {
                 action.AddDefaultBinding(this.mouse);
