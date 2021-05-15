@@ -1,4 +1,4 @@
-﻿//  Copyright (c) 2021 Esper Thomson
+//  Copyright (c) 2021 Esper Thomson
 //
 //  This file is part of KeybindLib.
 //

@@ -1,4 +1,4 @@
-﻿# ExampleMod
+# ExampleMod
 
 This mod serves as both an example implementation and a testing mod for KeybindLib.
 

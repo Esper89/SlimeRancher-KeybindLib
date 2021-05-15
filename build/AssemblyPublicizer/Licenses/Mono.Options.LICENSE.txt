@@ -1,4 +1,4 @@
-﻿### Xamarin Component for Mono.Options
+### Xamarin Component for Mono.Options
 
 **The MIT License (MIT)**
 
