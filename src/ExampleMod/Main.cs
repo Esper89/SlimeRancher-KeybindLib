@@ -14,9 +14,9 @@ namespace ExampleMod
 
         public override void Load()
         {
-            if (Keybinds.Test.Action.IsPressed) // `Keybind.Action` can only be accessed after the PreLoad step.
+            if (Keybinds.Test.Action.IsPressed) // `Keybind.Action` can only be accessed after PreLoad.
             {
-                Console.WriteLine("Hello World!");
+                Console.WriteLine("Hello World from KeybindLib!");
             }
 
             // ...

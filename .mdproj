@@ -6,7 +6,6 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include=".github\workflows\mono.yml" />
-    <None Include="build\publicizer.sh" />
     <None Include="build\AssemblyPublicizer\AssemblyPublicizer.exe" />
     <None Include="build\AssemblyPublicizer\Licenses\Mono.Options.LICENSE.txt" />
     <None Include="build\AssemblyPublicizer\Licenses\Mono.Cecil.LICENSE.txt" />
@@ -16,14 +15,8 @@
     <None Include="build\README.md" />
     <None Include=".gitignore" />
     <None Include="build\mods-dir" />
-    <None Include="build\autosetup.sh" />
-    <None Include="build\build.sh" />
     <None Include=".editorconfig" />
-    <None Include="configure">
-      <DependentUpon>configure</DependentUpon>
-    </None>
-    <None Include="Makefile">
-      <DependentUpon>Makefile</DependentUpon>
-    </None>
+    <None Include="configure" />
+    <None Include="Makefile" />
   </ItemGroup>
 </Project>

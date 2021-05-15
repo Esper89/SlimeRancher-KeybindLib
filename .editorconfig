@@ -13,10 +13,23 @@ max_line_length = 80
 # Makefile
 [{GNUmakefile,makefile,Makefile}]
 indent_style = tab
+tab_width = 4
+max_line_length = 0
 
 # MSBuild
 [*.{csproj,mdproj,proj,projitems,shproj,fsproj,target,props}]
 indent_size = 2
+max_line_length = 0
+
+# Solution
+[*.sln]
+indent_style = tab
+tab_width = 4
+
+# Git
+[*.git*]
+indent_style = tab
+tab_width = 4
 max_line_length = 0
 
 # XML
@@ -24,16 +37,25 @@ max_line_length = 0
 indent_size = 2
 max_line_length = 0
 
+# YAML
+[*.{yaml,yml}]
+indent_size = 2
+max_line_length = 0
+
 # JSON
 [*.json]
 indent_size = 4
+max_line_length = 0
 
 # Bash
 [{*.sh,configure}]
 indent_size = 2
+max_line_length = 80
 
 # Dotnet
 [*.{cs,vb}]
+indent_size = 4
+max_line_length = 120
 dotnet_diagnostic.IDE0055.severity = suggestion # Fix formatting
 dotnet_diagnostic.IDE1006.severity = suggestion # Naming rule violation
 

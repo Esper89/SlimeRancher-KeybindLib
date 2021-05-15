@@ -17,7 +17,7 @@ using System.Reflection;
 
 [assembly: AssemblyTitle("KeybindLib")]
 [assembly: AssemblyCopyright("Esper Thomson")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("A Slime Rancher library mod for adding new keybinds.")]
 [assembly: AssemblyVersion("0.1.*")]
 
 #if DEBUG

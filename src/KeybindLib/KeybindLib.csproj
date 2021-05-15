@@ -66,7 +66,7 @@
     <Compile Include="Keybind.cs" />
     <Compile Include="Bind.cs" />
     <Compile Include="KeybindRegistry.cs" />
-    <Compile Include="Patches\InputPatch.cs" />
+    <Compile Include="Patches\SetupPatch.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="MethodKeybindExtractor.cs" />
   </ItemGroup>

@@ -1,7 +1,16 @@
+# Targets:
+#	all				Test and build the mod. Default target.
+#	clean			Remove all traces of previous builds.
+#	build			Just build the mod.
+#	test			Build the mod and the example.
+#	debug			Build the mod and example in debug mode.
+#	install			Build the mod and install it.
+#	uninstall		Remove the installed mod.
+#	dist			Build the mod and zip the output.
+
 SHELL = /bin/sh
 
 NAME = KeybindLib
-
 BUILD = mdtool build src/$(NAME).sln
 TARGET = build/target/$(NAME).dll
 

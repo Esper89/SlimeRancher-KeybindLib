@@ -24,17 +24,17 @@ using Reg = KeybindLib.KeybindRegistry;
 
 namespace KeybindLib.Patches
 {
-    internal static class InputPatch // For patching the options menu and gamepad panel.
+    internal static class SetupPatch // For patching the options menu and gamepad panel.
     {
         [HarmonyPatch(typeof(OptionsUI), nameof(OptionsUI.SetupInput))]
-        internal static class KeyboardInputPatch // Options menu.
+        internal static class KeyboardSetupPatch // Options menu.
         {
             internal static IEnumCInstr Transpiler(IEnumCInstr instructions)
                 => Transpile(instructions);
         }
 
         [HarmonyPatch(typeof(GamepadPanel), nameof(GamepadPanel.SetupBindings))]
-        internal static class GamepadInputPatch // Gamepad panel.
+        internal static class GamepadSetupPatch // Gamepad panel.
         {
             internal static IEnumCInstr Transpiler(IEnumCInstr instructions)
                 => Transpile(instructions);
@@ -42,7 +42,7 @@ namespace KeybindLib.Patches
 
         private static IEnumCInstr Transpile(IEnumCInstr instructions) // Godspeed.
         {
-            MethodInfo method = AccessTools.Method(typeof(InputPatch), nameof(CreateBindingLines));
+            MethodInfo method = AccessTools.Method(typeof(SetupPatch), nameof(CreateBindingLines));
 
             IEnumCInstr InsertCall(OpCode opcode, object? operand = null)
             {

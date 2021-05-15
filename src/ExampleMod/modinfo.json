@@ -4,6 +4,6 @@
   "version": "0.1",
   "author": "Esper89",
   "description": "An example mod for testing KeybindLib.",
-  "dependencies": [ "keybindlib 0.1" ], // Make sure you have the right version number!
-  "load_before": [ "keybindlib" ] // If you get a KeybindRegisteredTooLateException, you likely forgot this part.
+  "dependencies": [ "keybindlib 0.1" ],
+  "load_before": [ "keybindlib" ]
 }

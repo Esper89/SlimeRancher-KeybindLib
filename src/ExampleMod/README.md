@@ -2,7 +2,7 @@
 
 This mod serves as both an example implementation and a testing mod for KeybindLib.
 
-Check out `Main.cs` for the mod's entry point, `Keybinds.cs` for the actual example, or `modinfo.json`.
+Check out [`Main.cs`](./Main.cs) for the mod's entry point, [`Keybinds.cs`](./Keybinds.cs) for the actual example, or [`modinfo.json`](./modinfo.json).
 
 If you have any questions, feel free to message me on Discord (`Esper#8989`) or matrix (`@esper89:matrix.org`).
 
