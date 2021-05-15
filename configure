@@ -348,16 +348,20 @@ use-submodule() # void()
   popd > /dev/null || return; }
   
   if [[ -n $path_arg ]]; then
-    
-    local path="$(clean-path "$path_arg")"/"$MODS_DIR"
+    local path="$path_arg"
+  elif [[ -f $CACHE_FILE ]]; then
+    local path="$(<"$CACHE_FILE")"
+  fi
   
-    if [[ -d $path ]]; then
-      mkdir -p "$path"
-      outn "$path" > "$MODS_DIR_STORE"
-    else
-      mkdir -p "mods-dir"
-      outn "mods-dir" > "$MODS_DIR_STORE"
-    fi
+  local cleanpath="$(clean-path "$path")"/"$MODS_DIR"
+  
+  if [[ -d $cleanpath ]]; then
+    mkdir -p "$cleanpath"
+    sayn "Writing path to '$MODS_DIR_STORE'..."
+    outn "$cleanpath" > "$MODS_DIR_STORE"
+  else
+    mkdir -p "mods-dir"
+    outn "mods-dir" > "$MODS_DIR_STORE"
   fi
   
   sayn "Done with the submodule!"
