@@ -18,5 +18,12 @@
     <None Include="build\mods-dir" />
     <None Include="build\autosetup.sh" />
     <None Include="build\build.sh" />
+    <None Include=".editorconfig" />
+    <None Include="configure">
+      <DependentUpon>configure</DependentUpon>
+    </None>
+    <None Include="Makefile">
+      <DependentUpon>Makefile</DependentUpon>
+    </None>
   </ItemGroup>
 </Project>

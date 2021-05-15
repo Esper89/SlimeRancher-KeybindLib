@@ -36,7 +36,9 @@ namespace KeybindLib
 #endif
             base.HarmonyInstance.PatchAll();
 
-            Main.hasPreloaded = true; // Lets the keybind registry know if it can accept new keybinds.
+            KeybindRegistry.RegisterTranslations();
+
+            Main.hasPreloaded = true; // Lets the keybind registry know that it can't accept new keybinds.
         }
 
         internal static bool hasPreloaded = false;

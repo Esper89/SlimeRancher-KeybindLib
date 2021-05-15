@@ -1,0 +1,419 @@
+#!/usr/bin/env bash
+# Esper89's Slime Rancher modding build configuration script.
+# Not compliant with GNU Build System standards.
+# See COPYING section below for copyright information.
+
+# :==========================: DIY INSTRUCTIONS :==========================: #
+#                                                                            #
+#   - Go to your Slime Rancher install.                                      #
+#   - For each folder in $ASSEMBLY_DIRS, copy it's contents to $BUILD_DEP.   #
+#   - Write the location of your SRML Mods folder to $MODS_DIR_STORE.        #
+#   - Run $PUBLICIZER on each assembly in $PUBLICIZE.                        #
+#                                                                            #
+#     ('$' denotes a variable, you can find them below)                      #
+#                                                                            #
+# :===================================||===================================: #
+
+{
+  # Sets a variable, if it's not already set.
+  var() { eval 'if [[ -z $'$1' ]]; then '$1=$2'; fi'; }
+  
+  # Directories containing required assemblies.
+  var ASSEMBLY_DIRS "(
+    SlimeRancher_Data/Managed
+    SRML/Libs
+  )"
+  
+  # The directory to copy the required assemblies to.
+  var BUILD_DEP "build/build-depends"
+  
+  # The location of the publicizer relative to $BUILD_DEP.
+  var PUBLICIZER "../AssemblyPublicizer/AssemblyPublicizer.exe"
+  
+  # The assemblies to publicize.
+  var PUBLICIZE "(
+    Assembly-CSharp.dll
+    InControl.dll
+    0Harmony.dll
+  )"
+  
+  # The directory to copy the output mod to.
+  var MODS_DIR "SRML/Mods"
+  
+  # The file storing the location of the SRML mods directory.
+  var MODS_DIR_STORE "build/mods-dir"
+  
+  # The name of the file to search for.
+  var GAME_EXE "SlimeRancher.exe"
+  
+  # Directories to search in.
+  var SEARCH_DIRS "(
+    ~/.steam/steam
+    ~/Library/'Application Support'/Steam
+    ~/.var/app/com.valvesoftware.Steam
+    ~/Games
+  )"
+  
+  # Windows directories to search in.
+  var WIN_SEARCH_DIRS "(
+    'Program Files (x86)'/Steam
+    'Program Files'/Steam
+    'Program Files'/Epic Games
+  )"
+  
+  # Prefixes for the windows directories.
+  var WIN_DIR_PREFIXES "(
+    ~/.wine/drive_c
+    /mnt/c
+    /cygdrive/c
+    /c:
+    /c
+  )"
+  
+  # The file to cahce your Slime Rancher install path in.
+  var CACHE_FILE ".sr-path.cache"
+}
+
+# :==============================: COPYING :===============================: #
+#                                                                            #
+#   Copyright (c) 2021 Esper Thomson                                         #
+#                                                                            #
+#   This program is free software: you can redistribute it and/or modify     #
+#   it under the terms of the GNU General Public License as published by     #
+#   the Free Software Foundation, either version 3 of the License, or        #
+#   (at your option) any later version.                                      #
+#                                                                            #
+#   This program is distributed in the hope that it will be useful,          #
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of           #
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the            #
+#   GNU General Public License for more details.                             #
+#                                                                            #
+#   You should have received a copy of the GNU General Public License        #
+#   along with this program.  If not, see <https://www.gnu.org/licenses/>.   #
+#                                                                            #
+# :===================================||===================================: #
+
+exec {stdout}<>"/dev/stdout"
+
+# Text flow.
+
+say() { >&$stdout printf -- '%s' "$*"; }
+sayn() { >&$stdout printf -- '%s\n' "$*"; }
+
+out() { printf -- '%s' "$*"; }
+outn() { printf -- '%s\n' "$*"; }
+
+err() { >&2 printf -- '%s' "$*"; }
+errn() { >&2 printf -- '%s\n' "$*"; }
+
+# Option "parsing".
+
+parse-options() # void(option[])
+{
+  unset -v path_arg no_prompt source_only git_submodule
+
+  if [[ $1 = "--help" || $1 = "-h" || $1 = "-?" || $1 = "--usage" ]]; then
+    cat << _help_text
+usage: ./configure [option]
+  options:
+    --help                  Show this help text.
+    --install-path PATH     The path to your Slime Rancher installation.
+                            Directory must meet various conditions.
+    --no-prompt PATH        Searches the root directory instead of prompting.
+                            Optionally specify a path (like the '-i' option).
+    --source-only           Load functions but don't run anything.
+                            Useful with the 'source' bash builtin.
+    --git-submodule PATH    Use the git submodule instead of copying files.
+                            Requires an authorized SSH key!
+                            Optionally specify a path.
+
+Options are mutually exclusive. Short forms work too.
+_help_text
+    exit 0
+    
+  elif [[ $1 = "--install-path" || $1 = "-i" ]]; then
+    path_arg="${*:2}"
+    if [[ -z $(xargs <<< "$path_arg") ]]; then
+      errn "Please specify a path with this option."
+      return 1
+    fi
+    
+  elif [[ $1 = "--no-prompt" || $1 = "-n" ]]; then
+    path_arg="${*:2}"
+    no_prompt=true
+    
+  elif [[ $1 = "--source-only" || $1 = "-s" ]]; then
+    source_only=true
+    
+  elif [[ $1 = "--git-submodule" || $1 = "-g" ]]; then
+    git_submodule=true
+    path_arg="${*:2}"
+    no_prompt=true
+    
+  elif [[ -n $(xargs <<< "$1") ]]; then
+    errn "Unrecognized option '$1'."
+    errn "Use '--help' for help."
+    return 1
+  fi
+}
+
+# In source-only mode, to use additional options, run this again.
+parse-options "$@" || exit
+
+# Make sure the working directory is correct.
+pushd -- "$(dirname "${BASH_SOURCE[0]}")" > /dev/null || exit
+
+# Yell about missing commands.
+if [[ -z $(command -v mono) ]]; then
+  errn "Mono is needed to run the publicizer and use other dotnet features!"
+  errn "Please install mono and try again."
+  errn '<https://www.mono-project.com/download/stable/>'
+  exit 1
+fi
+if [[ -z $(command -v mdtool) ]]; then
+  errn "MonoDevelop is needed to build the solution!"
+  errn "Please install monodevelop and try again."
+  errn '<https://www.monodevelop.com/download/>'
+fi
+if [[ $git_submodule = true && -z $(command -v git) ]]; then
+  errn "Git is needed to use the submodule!"
+  errn "Please install git and try again."
+  errn '<https://git-scm.com/downloads>'
+  exit 1
+fi
+if [[ -z $(command -v nuget) ]]; then
+  errn "NuGet is needed to restore packages!"
+  errn "Please install nuget and try again."
+  errn '<https://docs.microsoft.com/en-us/nuget/install-nuget-client-tools>'
+  exit 1
+fi
+
+### Here Be Dragons ###
+
+clean-path() # cleanpath(path)
+{
+  local path="$(eval "out $*")"
+  path="${path%$GAME_EXE}"
+  
+  if (( ${#path} > 1 )); then
+    path="${path%/}"
+  fi
+  
+  out "$path"
+}
+
+find-game-path() # path()
+(
+  check-clean-path() # void(cleanpath, msg)
+  {
+    if [[ ! -f $1/$GAME_EXE ]]; then return 1; fi
+    
+    if [[ ! -d $1/$MODS_DIR ]]; then return 2; fi
+    
+    for ((i = 0; i < ${#ASSEMBLY_DIRS[@]}; i++)); do
+      if [ ! -d "$1"/"${ASSEMBLY_DIRS[$i]}" ]; then return "$i" + 3; fi
+    done
+    
+    for asmdir in "${ASSEMBLY_DIRS[@]}"; do
+      if [[ ! -d "$1"/"$asmdir" ]]; then return 3; fi
+    done
+    
+    if [[ -n $2 ]]; then sayn "$2"; fi
+    
+    sayn "Writing path to cahce..."
+    outn "$1" > "$CACHE_FILE"
+    out "$1"
+    exit 0
+  }
+  
+  path-errmsg() # void(exit, path)
+  {
+    if (( $1 != 0 )); then errn "Incorrect path '$2'!"; fi
+    
+    if (( $1 == 1 )); then
+      errn "Directory does not contain '$GAME_EXE'."
+    elif (( $1 == 2 )); then
+      errn "Directory does not contain '$MODS_DIR'."
+    elif (( $1 == 3 )); then
+      errn "Directory does not contain '${ASSEMBLY_DIRS[$1 - 3]}'."
+    else
+      errn "Something went very wrong." # Good luck.
+      exit $1
+    fi
+  }
+  
+  if [[ -n $path_arg ]]; then
+   check-clean-path "$(clean-path "$path_arg")" "Using provided path option."
+   path-errmsg "$?" "$path_arg"
+  fi
+  
+  if [[ -f $CACHE_FILE ]]; then
+    local path="$(clean-path "$(<"$CACHE_FILE")")"
+    check-clean-path "$path" "Cache hit!"$'\n'"Cached path is '$path'."
+    errn "Cache invalid!"
+    rm -f -- "$CACHE_FILE"
+  fi
+  
+  check-paths() # path[] \0 | void()
+  {
+    while IFS= read -rd $'\0' found; do
+      
+      local path="$(clean-path "$found")"
+      check-clean-path "$path" "Found a valid install at '$path'!"
+      path-errmsg "$?" "Found '$GAME_EXE' at '$path' but it is not valid."
+    done
+  }
+  
+  sayn "Searching for your Slime Rancher installation..."
+  
+  if [[ -n $(command -v locate) ]]; then
+    sayn "Searching mlocate database..."
+    
+    check-paths < <(locate -e -0 -- */"$GAME_EXE" 2> /dev/null)
+  fi
+  
+  search-dir() # void(dir)
+  {
+    if [[ ! -d $1 ]]; then return 1; fi
+    sayn "Searching '$(clean-path "$1")'..."
+    
+    check-paths < <(find "$1" -name "$GAME_EXE" -type f -print0 2> /dev/null)
+  }
+  
+  for dir in "${SEARCH_DIRS[@]}"; do
+    search-dir "$dir"
+  done
+  
+  # WSL/Cygwin functionality not tested.
+  for winpfx in "${WIN_DIR_PREFIXES[@]}"; do
+    for windir in "${WIN_SEARCH_DIRS[@]}"; do
+      search-dir "$winpfx"/"$windir"
+    done
+  done
+  
+  prompt() # void(message)
+  {
+    say "$1"
+    read -r input
+    local path="$(clean-path "$input")"
+    check-clean-path "$path" "Using provided path."
+    path-errmsg "$?" "$input"
+    prompt "Type the path to your Slime Rancher installation: "
+  }
+  
+  if [[ $no_prompt = true ]]; then
+    sayn "Prompt disabled and path list exhausted, trying nuclear option."
+    search-dir /
+    errn "Unable to locate your Slime Rancher installation!"
+    errn "Exiting..."
+    exit 1
+  else
+    sayn "Unable to automatically locate your Slime Rancher installation."
+    prompt "Type the path to it: "
+  fi
+)
+
+copy-assemblies() # void(option)
+{
+  game_path="$(find-game-path)" || return
+  
+  sayn "Writing path to '$MODS_DIR_STORE'..."
+  outn "$game_path"/"$MODS_DIR" > "$MODS_DIR_STORE"
+  
+  mkdir -p "$BUILD_DEP"
+  sayn "Copying assemblies to '$BUILD_DEP'..."
+  
+  for asm_dir in "${ASSEMBLY_DIRS[@]}"; do
+    sayn "Copying contents of '$asm_dir'..."
+    cp -rt "$BUILD_DEP" "$game_path"/"$asm_dir"/.
+  done
+  
+  sayn "Done copying assemblies!"
+}
+
+use-submodule() # void()
+{
+  sayn "Using '$BUILD_DEP' git submodule..."
+  
+  sayn "Updating submodule..."
+  git submodule update --init --recursive -- "$BUILD_DEP" > /dev/null
+  
+  pushd -- "$BUILD_DEP" > /dev/null && {
+    sayn "Cleaning submodule..."
+    git clean -xfd > /dev/null
+    
+    sayn "Resetting submodule..."
+    git reset --hard > /dev/null
+    
+  popd > /dev/null || return; }
+  
+  if [[ -n $path_arg ]]; then
+    
+    local path="$(clean-path "$path_arg")"/"$MODS_DIR"
+  
+    if [[ -d $path ]]; then
+      mkdir -p "$path"
+      outn "$path" > "$MODS_DIR_STORE"
+    else
+      mkdir -p "mods-dir"
+      outn "mods-dir" > "$MODS_DIR_STORE"
+    fi
+  fi
+  
+  sayn "Done with the submodule!"
+}
+
+get-build-depends() # void()
+{
+  if [[ $git_submodule = true ]]; then
+    use-submodule || return
+  else
+    copy-assemblies || return
+  fi
+}
+
+publicize-assemblies() # void()
+{
+  sayn "Publicizing assemblies in '$BUILD_DEP'..."
+  
+  pushd -- "$BUILD_DEP" > /dev/null && {
+    for asm in "${PUBLICIZE[@]}"; do
+      sayn "Publicizing '$asm'..."
+      
+      if [[ $use_mono = true ]]; then
+        mono "$PUBLICIZER" -i "$asm" > /dev/null
+      else
+        ./"$PUBLICIZER" -i "$asm" > /dev/null
+      fi
+    done
+  popd > /dev/null || return; }
+
+  sayn "Done publicizing!"
+}
+
+restore-packages() # void()
+{
+  sayn "Restoring packages..."
+  
+  pushd -- src > /dev/null && {
+    nuget restore > /dev/null
+  popd > /dev/null || return; }
+}
+
+configure() # void()
+{
+  sayn "Configuring..."
+
+  get-build-depends || return
+  publicize-assemblies || return
+  restore-packages || return
+  
+  sayn "Done configuring!"
+  sayn "Run 'make' to build."
+}
+
+if [[ ! $source_only = true ]]; then
+  configure || exit
+fi
+
+# <3

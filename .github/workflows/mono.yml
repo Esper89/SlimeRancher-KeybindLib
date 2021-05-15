@@ -5,47 +5,35 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-    types:
-      - opened
-      - edited
-      - reopened
-      - synchronize
-      - ready_for_review
-      - unlocked
-      - review_requested
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Install SSH key
+    - name: Install SSH Key
       uses: shimataro/ssh-key-action@v2
       with:
         key: ${{ secrets.SSH_KEY }}
-        name: id_rsa
         known_hosts: ${{ secrets.KNOWN_HOSTS }}
-        if_key_exists: fail
-    - name: Checkout repository
+    - name: Checkout Repository
       uses: actions/checkout@v2
-    - name: Update submodules
-      run: git submodule update --init --recursive
-    - name: Install packages
+    - name: Install Packages
       run: |
         sudo apt-get install -y apt-transport-https dirmngr
         sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
         echo "deb https://download.mono-project.com/repo/ubuntu vs-bionic main" | sudo tee /etc/apt/sources.list.d/mono-official-vs.list
         sudo apt-get update
         sudo apt-get install -y mono-complete monodevelop nuget
-    - name: Publicize assemblies
-      run: build/publicizer.sh
+    - name: Configure
+      run: ./configure --git-submodule
     - name: Build
-      run: build/build.sh
+      run: make
     - name: Upload artifact
       uses: actions/upload-artifact@v2
       with:
         name: build-target
         path: build/target/*
-    - name: Push documentation    
+    - name: Push Markdown Documentation
       uses: EndBug/add-and-commit@v7
       with:
         add: 'src/KeybindLib/README.md'

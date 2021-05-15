@@ -133,7 +133,10 @@ namespace KeybindLib
         /// <remarks> Only registers english translations if the Translation API isn't available. </remarks>
         protected internal virtual void RegisterTranslations()
         {
-            if (SRModLoader.IsModPresent("translationapi"))
+            // FIXME Translation API Support
+            // For some reason unknown to me, the translation API isn't working as expected.
+
+            /*if (SRModLoader.IsModPresent("translationapi"))
             {
                 foreach (KeyValuePair<Lang, string> translation in this.Translations)
                 {
@@ -144,27 +147,30 @@ namespace KeybindLib
                 }
             }
             else
+            {*/
+
+            if (this.Translations.TryGetValue(Lang.EN, out string value))
             {
-                if (this.Translations.TryGetValue(Lang.EN, out string value))
-                {
-                    this.RegisterTranslationWithSRML(value + Keybind.DEBUG_SUFFIX);
-                }
-                else if (this.Translations.Keys.Count >= 1) // In case there's no English translation.
-                {
-                    this.RegisterTranslationWithSRML(
-                        this.Translations.Values.ToArray()[0] +
-                        Keybind.DEBUG_SUFFIX
-                    );
-                }
+                this.RegisterTranslationWithSRML(value + Keybind.DEBUG_SUFFIX);
             }
+            else if (this.Translations.Keys.Count >= 1) // In case there's no English translation.
+            {
+                this.RegisterTranslationWithSRML(
+                    this.Translations.Values.ToArray()[0] +
+                    Keybind.DEBUG_SUFFIX
+                );
+            }
+
+            //}
         }
 
         private void RegisterTranslationWithSRML(string value)
             => TranslationPatcher.AddUITranslation(this.Name, value);
 
         private void RegisterTranslationWithAPI(Lang language, string value) // Separate method to prevent FileNotFoundException.
-            => TranslationAPI.TranslationUtil.RegisterUITranslation(
+            => TranslationAPI.TranslationUtil.RegisterTranslation(
                 selectedLang: language,
+                bundle: TranslationAPI.LanguageController.UI_BUNDLE,
                 key: this.Name,
                 value: value
             );

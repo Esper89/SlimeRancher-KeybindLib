@@ -53,22 +53,19 @@ namespace KeybindLib.Patches
 
             #region explanation
 
-            /* This transpiler acts in three ways, all of which just insert
-             * calls to a specific method, with varying arguments. These
-             * method calls look like this:
+            /* This transpiler acts in three ways, all of which just insert calls to a specific method, with varying
+             * arguments. These method calls look like this:
 
                ldarg.0
              ? ldstr <string> : ldnull
                call <method>(this, string)
 
-             * First, they load argument zero (`this`) with ldarg.0. Then,
-             * they load a string or null to tell the method which keybinds
-             * need to be created at this time. Finally, they call the method,
-             * popping those two arguments off the stack.
+             * First, they load argument zero (`this`) with ldarg.0. Then, they load a string or null to tell the
+             * method which keybinds need to be created at this time. Finally, they call the method, popping those
+             * two arguments off the stack.
 
-             * The first task is to find the first ldstr with an operand that
-             * starts with "key." and inserts a call directly after that, to
-             * load keybinds that have to go at the start of the list:
+             * The first task is to find the first ldstr with an operand that starts with "key." and inserts a call
+             * directly after that, to load keybinds that have to go at the start of the list:
 
                ...
                ldarg.0
@@ -82,10 +79,9 @@ namespace KeybindLib.Patches
                pop
                ...
 
-             * The second task is checking every subsequent ldstr call, and if
-             * it matches a string in the ComesAfter dictionary, that string
-             * is loaded and the method is called, to specify exactly which
-             * keybinds to create at this time:
+             * The second task is checking every subsequent ldstr call, and if it matches a string in the ComesAfter
+             * dictionary, that string is loaded and the method is called, to specify exactly which keybinds to
+             * create at this time:
 
                ...
                ldarg.0
@@ -99,11 +95,10 @@ namespace KeybindLib.Patches
                pop
                ...
 
-             * The third task is to wait until ldc.i4.1, which indicates the
-             * end of the list. Then, calls need to be inserted once for each
-             * string that wasn't found while traversing the main list. After
-             * all those are done, a call using null is performed, to create
-             * all the keybinds that should be at the end of the list:
+             * The third task is to wait until ldc.i4.1, which indicates the end of the list. Then, calls need to be
+             * inserted once for each string that wasn't found while traversing the main list. After all those are
+             * done, a call using null is performed, to create all the keybinds that should be at the end of the
+             * list:
 
                ...
                ldarg.0
@@ -122,11 +117,9 @@ namespace KeybindLib.Patches
                stloc.3
                ...
 
-             * And that's how this transpiler works. I figured the source code
-             * was the most appropriate place to write an explanation, as it
-             * is always where it needs to be and can be modified when
-             * necessary. If you make changes to this transpiler, please also
-             * update this explanation.
+             * And that's how this transpiler works. I figured the source code was the most appropriate place to
+             * write an explanation, as it is always where it needs to be and can be modified when necessary. If you
+             * make changes to this transpiler, please also update this explanation.
              */
 
             #endregion
@@ -196,14 +189,10 @@ namespace KeybindLib.Patches
             {
                 if (instance is OptionsUI)
                 {
-                    keybind.RegisterTranslations();
-
                     ((OptionsUI)instance).CreateKeyBindingLine(keybind.Name, keybind.Action);
                 }
                 else if (instance is GamepadPanel)
                 {
-                    // Translations are registered only once.
-
                     ((GamepadPanel)instance).CreateGamepadBindingLine(keybind.Name, keybind.Action);
                 }
                 else

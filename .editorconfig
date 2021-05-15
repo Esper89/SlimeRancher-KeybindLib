@@ -3,22 +3,33 @@ root = true
 # Global
 [*]
 indent_style = space
+indent_size = 4
 end_of_line = lf
 charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
-max_line_length = 120
+max_line_length = 80
+
+# Makefile
+[{GNUmakefile,makefile,Makefile}]
+indent_style = tab
 
 # MSBuild
 [*.{csproj,mdproj,proj,projitems,shproj,fsproj,target,props}]
 indent_size = 2
+max_line_length = 0
 
 # XML
 [*.{config,nuspec,resx,xml}]
 indent_size = 2
+max_line_length = 0
 
 # JSON
 [*.json]
+indent_size = 4
+
+# Bash
+[{*.sh,configure}]
 indent_size = 2
 
 # Dotnet
@@ -101,6 +112,7 @@ dotnet_separate_import_directive_groups = true
 # C#
 [*.cs]
 indent_size = 4
+max_line_length = 120
 
 ## Style
 
@@ -203,7 +215,9 @@ csharp_prefer_simple_using_statement = true:none
 # F#
 [*.{fs, fsx, fsi}]
 indent_size = 4
+max_line_length = 120
 
 # VB.NET
 [*.vb]
 indent_size = 4
+max_line_length = 120

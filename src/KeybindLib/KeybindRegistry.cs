@@ -71,6 +71,14 @@ namespace KeybindLib
 
         #endregion
 
+        internal static void RegisterTranslations()
+        {
+            foreach (Keybind keybind in Reg.keybinds)
+            {
+                keybind.RegisterTranslations();
+            }
+        }
+
         private static void AddKeybindPosition(Keybind keybind)
         {
             if (keybind.ComesBefore is null)
