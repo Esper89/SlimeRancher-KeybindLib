@@ -32,6 +32,11 @@ indent_style = tab
 tab_width = 4
 max_line_length = 0
 
+# Markdown
+[*.{markdown,mdown,mkdn,mkd,md}]
+indent_size = 1
+max_line_length = 0
+
 # XML
 [*.{config,nuspec,resx,xml}]
 indent_size = 2

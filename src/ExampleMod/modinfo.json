@@ -3,7 +3,7 @@
   "name": "KeybindLib Example Mod",
   "version": "0.1",
   "author": "Esper89",
-  "description": "An example mod for testing KeybindLib.",
+  "description": "Example mod for testing KeybindLib.",
   "dependencies": [ "keybindlib 0.1" ],
   "load_before": [ "keybindlib" ]
 }

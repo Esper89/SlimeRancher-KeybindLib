@@ -34,7 +34,7 @@ debug:
 	$(BUILD) -c:Debug
 
 install: build
-	cp -t "$(shell cat "build/mods-dir")" $(TARGET)
+	cp -ft "$(shell cat "build/mods-dir")" $(TARGET)
 
 uninstall:
 	rm -f -- "$(shell cat "build/mods-dir")/$(NAME).dll" $(TARGET)
