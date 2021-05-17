@@ -30,6 +30,7 @@ namespace KeybindLib.Patches
             {
                 PlayerAction action = __instance.CreatePlayerAction(keybind.ActionName);
                 keybind.Action = action;
+                keybind.BindAllDefaultsTo(action);
             }
         }
     }

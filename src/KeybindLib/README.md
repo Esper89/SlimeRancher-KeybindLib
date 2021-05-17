@@ -16,7 +16,7 @@
   - [#ctor()](#M-KeybindLib-Bind-KeyBind-#ctor-InControl-Key- 'KeybindLib.Bind.KeyBind.#ctor(InControl.Key)')
   - [BindDefault()](#M-KeybindLib-Bind-KeyBind-BindDefault-InControl-PlayerAction- 'KeybindLib.Bind.KeyBind.BindDefault(InControl.PlayerAction)')
 - [Keybind](#T-KeybindLib-Keybind 'KeybindLib.Keybind')
-  - [#ctor(name,defaultBindings,comesBefore,translations,keyPressed,keyReleased,keyRepeated)](#M-KeybindLib-Keybind-#ctor-System-String,KeybindLib-Bind[],System-String,System-Collections-Generic-Dictionary{MessageDirector-Lang,System-String},KeybindLib-Keybind-KeyAction,KeybindLib-Keybind-KeyAction,KeybindLib-Keybind-KeyAction- 'KeybindLib.Keybind.#ctor(System.String,KeybindLib.Bind[],System.String,System.Collections.Generic.Dictionary{MessageDirector.Lang,System.String},KeybindLib.Keybind.KeyAction,KeybindLib.Keybind.KeyAction,KeybindLib.Keybind.KeyAction)')
+  - [#ctor(name,defaultBindings,comesBefore,translations,keyPressed,keyReleased,keyDownUpdate)](#M-KeybindLib-Keybind-#ctor-System-String,KeybindLib-Bind[],System-String,System-Collections-Generic-Dictionary{MessageDirector-Lang,System-String},KeybindLib-Keybind-KeyAction,KeybindLib-Keybind-KeyAction,KeybindLib-Keybind-KeyAction- 'KeybindLib.Keybind.#ctor(System.String,KeybindLib.Bind[],System.String,System.Collections.Generic.Dictionary{MessageDirector.Lang,System.String},KeybindLib.Keybind.KeyAction,KeybindLib.Keybind.KeyAction,KeybindLib.Keybind.KeyAction)')
   - [BEGINNING_OF_LIST](#F-KeybindLib-Keybind-BEGINNING_OF_LIST 'KeybindLib.Keybind.BEGINNING_OF_LIST')
   - [KEYBIND_PREFIX](#F-KeybindLib-Keybind-KEYBIND_PREFIX 'KeybindLib.Keybind.KEYBIND_PREFIX')
   - [Action](#P-KeybindLib-Keybind-Action 'KeybindLib.Keybind.Action')
@@ -29,9 +29,6 @@
   - [RegisterTranslations()](#M-KeybindLib-Keybind-RegisterTranslations 'KeybindLib.Keybind.RegisterTranslations')
 - [KeybindInvalidException](#T-KeybindLib-KeybindRegistry-KeybindInvalidException 'KeybindLib.KeybindRegistry.KeybindInvalidException')
   - [Keybind](#P-KeybindLib-KeybindRegistry-KeybindInvalidException-Keybind 'KeybindLib.KeybindRegistry.KeybindInvalidException.Keybind')
-- [KeybindNotReadyException](#T-KeybindLib-Keybind-KeybindNotReadyException 'KeybindLib.Keybind.KeybindNotReadyException')
-  - [#ctor(keybind)](#M-KeybindLib-Keybind-KeybindNotReadyException-#ctor-KeybindLib-Keybind- 'KeybindLib.Keybind.KeybindNotReadyException.#ctor(KeybindLib.Keybind)')
-  - [Keybind](#P-KeybindLib-Keybind-KeybindNotReadyException-Keybind 'KeybindLib.Keybind.KeybindNotReadyException.Keybind')
 - [KeybindRegisteredTooLateException](#T-KeybindLib-KeybindRegistry-KeybindRegisteredTooLateException 'KeybindLib.KeybindRegistry.KeybindRegisteredTooLateException')
   - [Keybind](#P-KeybindLib-KeybindRegistry-KeybindRegisteredTooLateException-Keybind 'KeybindLib.KeybindRegistry.KeybindRegisteredTooLateException.Keybind')
 - [KeybindRegistry](#T-KeybindLib-KeybindRegistry 'KeybindLib.KeybindRegistry')
@@ -148,7 +145,16 @@ KeybindLib.Keybind
 
 ##### Summary
 
-A delegate that runs when something happens with a keybind.
+A delegate that runs when something interesting happens with a keybind.
+
+##### Remarks
+
+Event handler.
+
+##### See Also
+
+- [KeybindLib.Keybind.KeyPressed](#E-KeybindLib-Keybind-KeyPressed 'KeybindLib.Keybind.KeyPressed')
+- [KeybindLib.Keybind.KeyReleased](#E-KeybindLib-Keybind-KeyReleased 'KeybindLib.Keybind.KeyReleased')
 
 <a name='T-KeybindLib-Bind-KeyBind'></a>
 ## KeyBind `type`
@@ -199,7 +205,7 @@ A keybind.
 - [KeybindLib.KeybindRegistry](#T-KeybindLib-KeybindRegistry 'KeybindLib.KeybindRegistry')
 
 <a name='M-KeybindLib-Keybind-#ctor-System-String,KeybindLib-Bind[],System-String,System-Collections-Generic-Dictionary{MessageDirector-Lang,System-String},KeybindLib-Keybind-KeyAction,KeybindLib-Keybind-KeyAction,KeybindLib-Keybind-KeyAction-'></a>
-### #ctor(name,defaultBindings,comesBefore,translations,keyPressed,keyReleased,keyRepeated) `constructor`
+### #ctor(name,defaultBindings,comesBefore,translations,keyPressed,keyReleased,keyDownUpdate) `constructor`
 
 ##### Summary
 
@@ -215,7 +221,7 @@ Creates a new [Keybind](#T-KeybindLib-Keybind 'KeybindLib.Keybind').
 | translations | [System.Collections.Generic.Dictionary{MessageDirector.Lang,System.String}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{MessageDirector.Lang,System.String}') | The translations that apply to this instance. |
 | keyPressed | [KeybindLib.Keybind.KeyAction](#T-KeybindLib-Keybind-KeyAction 'KeybindLib.Keybind.KeyAction') | The [KeyAction](#T-KeybindLib-Keybind-KeyAction 'KeybindLib.Keybind.KeyAction') to run when this key is pressed. |
 | keyReleased | [KeybindLib.Keybind.KeyAction](#T-KeybindLib-Keybind-KeyAction 'KeybindLib.Keybind.KeyAction') | The [KeyAction](#T-KeybindLib-Keybind-KeyAction 'KeybindLib.Keybind.KeyAction') to run when this key is released. |
-| keyRepeated | [KeybindLib.Keybind.KeyAction](#T-KeybindLib-Keybind-KeyAction 'KeybindLib.Keybind.KeyAction') | The [KeyAction](#T-KeybindLib-Keybind-KeyAction 'KeybindLib.Keybind.KeyAction') to run every frame if this key is down. |
+| keyDownUpdate | [KeybindLib.Keybind.KeyAction](#T-KeybindLib-Keybind-KeyAction 'KeybindLib.Keybind.KeyAction') | The [KeyAction](#T-KeybindLib-Keybind-KeyAction 'KeybindLib.Keybind.KeyAction') to run every frame if this key is down. |
 
 <a name='F-KeybindLib-Keybind-BEGINNING_OF_LIST'></a>
 ### BEGINNING_OF_LIST `constants`
@@ -238,11 +244,9 @@ The expected prefix that every keybind's name should have.
 
 This instance's .
 
-##### Exceptions
+##### Remarks
 
-| Name | Description |
-| ---- | ----------- |
-| [KeybindLib.Keybind.KeybindNotReadyException](#T-KeybindLib-Keybind-KeybindNotReadyException 'KeybindLib.Keybind.KeybindNotReadyException') | Thrown when this is accessed before the Load step. |
+Only null during PreLoad.
 
 <a name='P-KeybindLib-Keybind-ActionName'></a>
 ### ActionName `property`
@@ -341,37 +345,6 @@ An exception thrown when an invalid [Keybind](#P-KeybindLib-KeybindRegistry-Keyb
 ##### Summary
 
 The invalid [Keybind](#P-KeybindLib-KeybindRegistry-KeybindInvalidException-Keybind 'KeybindLib.KeybindRegistry.KeybindInvalidException.Keybind') in question.
-
-<a name='T-KeybindLib-Keybind-KeybindNotReadyException'></a>
-## KeybindNotReadyException `type`
-
-##### Namespace
-
-KeybindLib.Keybind
-
-##### Summary
-
-An exception thrown when [Action](#P-KeybindLib-Keybind-Action 'KeybindLib.Keybind.Action') is accessed before it is ready.
-
-<a name='M-KeybindLib-Keybind-KeybindNotReadyException-#ctor-KeybindLib-Keybind-'></a>
-### #ctor(keybind) `constructor`
-
-##### Summary
-
-Creates a new [KeybindNotReadyException](#T-KeybindLib-Keybind-KeybindNotReadyException 'KeybindLib.Keybind.KeybindNotReadyException').
-
-##### Parameters
-
-| Name | Type | Description |
-| ---- | ---- | ----------- |
-| keybind | [KeybindLib.Keybind](#T-KeybindLib-Keybind 'KeybindLib.Keybind') | The offending keybind. |
-
-<a name='P-KeybindLib-Keybind-KeybindNotReadyException-Keybind'></a>
-### Keybind `property`
-
-##### Summary
-
-The [Keybind](#T-KeybindLib-Keybind 'KeybindLib.Keybind') whose [Action](#P-KeybindLib-Keybind-Action 'KeybindLib.Keybind.Action') was accessed before it was ready.
 
 <a name='T-KeybindLib-KeybindRegistry-KeybindRegisteredTooLateException'></a>
 ## KeybindRegisteredTooLateException `type`

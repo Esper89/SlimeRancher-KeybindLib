@@ -15,16 +15,25 @@
 //  You should have received a copy of the GNU General Public License
 //  along with KeybindLib.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
+using Stdout = System.Console;
+using SRMLOut = SRML.Console.Console;
 
 namespace KeybindLib
 {
     internal static class Log
     {
         public static void Write(object msg)
-            => Console.WriteLine($"{nameof(KeybindLib)}: {msg}");
+        {
+            string text = $"{nameof(KeybindLib)}: {msg}";
+
+            Stdout.WriteLine(text);
+            SRMLOut.Log(text);
+        }
 
         public static void Append(string text)
-            => Console.Write(text);
+        {
+            Stdout.Write(text);
+            SRMLOut.Log(text);
+        }
     }
 }

@@ -15,9 +15,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with KeybindLib.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using InControl;
 #if TRSL_API
@@ -39,7 +37,7 @@ namespace KeybindLib
         /// <param name="translations"> The translations that apply to this instance. </param>
         /// <param name="keyPressed"> The <see cref="KeyAction"/> to run when this key is pressed. </param>
         /// <param name="keyReleased"> The <see cref="KeyAction"/> to run when this key is released. </param>
-        /// <param name="keyRepeated"> The <see cref="KeyAction"/> to run every frame if this key is down. </param>
+        /// <param name="keyDownUpdate"> The <see cref="KeyAction"/> to run every frame if this key is down. </param>
         public Keybind(
             string name,
             Bind[]? defaultBindings = null,
@@ -47,7 +45,7 @@ namespace KeybindLib
             Dictionary<Lang, string>? translations = null,
             KeyAction? keyPressed = null,
             KeyAction? keyReleased = null,
-            KeyAction? keyRepeated = null
+            KeyAction? keyDownUpdate = null
         )
         {
             this.Name = name + Keybind.DEBUG_SUFFIX;
@@ -56,7 +54,7 @@ namespace KeybindLib
             this.Translations = translations ?? new Dictionary<Lang, string> { };
             this.KeyPressed = keyPressed ?? ((player) => { });
             this.KeyReleased = keyReleased ?? ((player) => { });
-            this.KeyRepeated = keyRepeated ?? ((player) => { });
+            this.KeyDownUpdate = keyDownUpdate ?? ((player) => { });
         }
 
         /// <summary> This instance's name. </summary>
@@ -93,7 +91,11 @@ namespace KeybindLib
 
         #region events
 
-        /// <summary> A delegate that runs when something happens with a keybind. </summary>
+        /// <summary> A delegate that runs when something interesting happens with a keybind. </summary>
+        /// <remarks> Event handler. </remarks>
+        /// <seealso cref="KeyPressed"/>
+        /// <seealso cref="KeyReleased"/>
+        /// <see cref="KeyDownUpdate"/>
         public delegate void KeyAction(vp_FPPlayerEventHandler player);
 
         /// <summary> Occurs when this instance's key is pressed. </summary>
@@ -102,19 +104,13 @@ namespace KeybindLib
         /// <summary> Occurs when this instance's key is released. </summary>
         public event KeyAction KeyReleased;
 
-        /// <summary> Occurs every frame that this instance's key remains down for. </summary>
-        public event KeyAction KeyRepeated;
+        /// <summary> Occurs every frame that this instance's key is down for. </summary>
+        public event KeyAction KeyDownUpdate;
 
-        /// <summary> Occurs every frame, when player inputs are to be updated. </summary>
-        /// <remarks> Does not occur when the game is paused or when player inputs are disabled. </remarks>
-        public static event KeyAction Update = (player) => { };
-
-        /// <summary> Occurs every frame (even when the game is paused), when player inputs are to be updated. </summary>
-        /// <remarks> Occurs even if player inputs are disabled. </remarks>
-        public static event KeyAction UpdatePaused = (player) => { };
-
-        internal void UpdateEvents(vp_FPPlayerEventHandler player)
+        internal void Update(vp_FPPlayerEventHandler player)
         {
+            if (this.Action is null) return;
+
             if (this.Action.WasPressed)
             {
                 this.KeyPressed(player);
@@ -122,49 +118,24 @@ namespace KeybindLib
 
             if (this.Action.WasReleased)
             {
-                this.KeyRepeated(player);
+                this.KeyReleased(player);
             }
 
-            if (this.Action.WasRepeated)
+            if (this.Action.IsPressed)
             {
-                this.KeyRepeated(player);
+                this.KeyDownUpdate(player);
             }
-        }
-
-        internal static void EventUpdate(vp_FPInput instance)
-        {
-            Keybind.Update(instance.FPPlayer);
-
-            foreach (Keybind keybind in KeybindRegistry.keybinds)
-            {
-                keybind.UpdateEvents(instance.FPPlayer);
-            }
-        }
-
-        internal static void EventUpdatePaused(vp_FPInput instance)
-        {
-            Keybind.UpdatePaused(instance.FPPlayer);
         }
 
         #endregion
 
         /// <summary> This instance's <seealso cref="PlayerAction"/>. </summary>
-        /// <exception cref="KeybindNotReadyException"> Thrown when this is accessed before the Load step. </exception>
-        public PlayerAction Action
-        {
-            get => this._action ?? throw new KeybindNotReadyException(this);
-
-            internal set
-            {
-                this._action = value;
-                this.BindAllDefaultsTo(value);
-            }
-        }
-        private PlayerAction? _action;
+        /// <remarks> Only null during PreLoad. </remarks>
+        public PlayerAction? Action { get; internal set; }
 
         /// <summary> Binds all <see cref="DefaultBindings"/> of this instance to the given <see cref="PlayerAction"/>. </summary>
         /// <param name="action"> The <see cref="PlayerAction"/> to bind to. </param>
-        protected virtual void BindAllDefaultsTo(PlayerAction action)
+        protected internal virtual void BindAllDefaultsTo(PlayerAction action)
         {
             foreach (Bind binding in this.DefaultBindings)
             {
@@ -222,25 +193,5 @@ namespace KeybindLib
                 value: value
             );
 #endif
-
-        /// <summary> An exception thrown when <see cref="Action"/> is accessed before it is ready. </summary>
-        [EditorBrowsable(EditorBrowsableState.Advanced)]
-        public class KeybindNotReadyException : InvalidOperationException
-        {
-            /// <summary> Creates a new <see cref="KeybindNotReadyException"/>. </summary>
-            /// <param name="keybind"> The offending keybind. </param>
-            protected internal KeybindNotReadyException(Keybind keybind) : base(
-                $"This {nameof(KeybindLib.Keybind)} ({keybind.Name}) has not been fully set up yet. " +
-                $"Please wait until {nameof(SRInput.PlayerActions)} has been initialized before accessing " +
-                $"{nameof(KeybindLib.Keybind)}.{nameof(Action)}. " +
-                $"{nameof(SRInput.PlayerActions)} is initialized between the Load and PreLoad steps."
-            )
-            {
-                this.Keybind = keybind;
-            }
-
-            /// <summary> The <see cref="KeybindLib.Keybind"/> whose <see cref="Action"/> was accessed before it was ready. </summary>
-            public Keybind Keybind { get; }
-        }
     }
 }

@@ -52,6 +52,20 @@ namespace KeybindLib
             }
         }
 
+        /// <summary> Occurs every frame when player inputs are to be updated. </summary>
+        /// <remarks> Does not occur when the game is paused or when player inputs are disabled. </remarks>
+        public static event Keybind.KeyAction Update = (player) => { };
+
+        internal static void UpdateAll(vp_FPInput instance)
+        {
+            Reg.Update(instance.FPPlayer);
+
+            foreach (Keybind keybind in KeybindRegistry.keybinds)
+            {
+                keybind.Update(instance.FPPlayer);
+            }
+        }
+
         #region collections
 
         private static readonly HashSet<string> registeredNames

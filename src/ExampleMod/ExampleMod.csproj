@@ -34,17 +34,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="Assembly-CSharp_publicized">
-      <HintPath>..\..\build\build-depends\publicized_assemblies\Assembly-CSharp_publicized.dll</HintPath>
-    </Reference>
-    <Reference Include="InControl_publicized">
-      <HintPath>..\..\build\build-depends\publicized_assemblies\InControl_publicized.dll</HintPath>
-    </Reference>
-    <Reference Include="0Harmony">
-      <HintPath>..\..\build\build-depends\0Harmony.dll</HintPath>
-    </Reference>
     <Reference Include="SRML">
       <HintPath>..\..\build\build-depends\SRML.dll</HintPath>
+    </Reference>
+    <Reference Include="InControl">
+      <HintPath>..\..\build\build-depends\InControl.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\build\build-depends\Assembly-CSharp.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

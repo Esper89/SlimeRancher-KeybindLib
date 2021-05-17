@@ -23,63 +23,44 @@ using Instrs = System.Collections.Generic.IEnumerable<HarmonyLib.CodeInstruction
 namespace KeybindLib.Patches
 {
     [HarmonyPatch(typeof(vp_FPInput), nameof(vp_FPInput.Update))]
-    internal static class UpdatePatch // Allows us to update keybinds at the right time.
+    internal static class UpdatePatch // Allows us to update keybinds at the right time every frame.
     {
         internal static Instrs Transpiler(Instrs instructions)
         {
-            // Method called even when the game is paused.
-            MethodInfo methodPaused = AccessTools.Method(typeof(vp_FPInput), nameof(vp_FPInput.UpdateCursorLock));
-
-            // Method called only when the game isn't paused.
-            MethodInfo methodNonPaused = AccessTools.Method(typeof(vp_FPInput), nameof(vp_FPInput.InputInteract));
+            MethodInfo targetMethod = AccessTools.Method(typeof(vp_FPInput), nameof(vp_FPInput.InputCamera));
 
             #region explanation
 
-            /* This transpiler returns each CodeInstruction after it's had a chance to decide what to do with it,
-             * meaning we can insert our own method calls before Slime Rancher's calls. We do this twice; once for
-             * the section of methods that will always run, even when the game is paused, and then again for the
-             * methods that will only run when the game is paused.
+            /* This transpiler returns each CodeInstruction and then checks if it's the one we're looking for. If it
+             * is, we insert some instructions to call `KeybindRegistry.UpdateAll` to update all the keybinds at the
+             * right time, after all the vanilla keybinds.
 
                ...
                ldarg.0
+             ! callvirt this.InputCamera()
              > ldarg.0
-             > call Keybind.EventUpdatePaused(this)
-             ! callvirt this.UpdateCursorLock()
-               ...
-               ldarg.0
-             > ldarg.0
-             > call Keybind.EventUpdate(this)
-             ! callvirt this.InputInteract()
-               ...
+             > call KeybindRegistry.UpdateAll(this)
+               ret
 
-             * As you can see, the `callvirt` instruction that we're looking out for ends up coming after the code
-             * that we insert into the method. This allows our code to run before any of the game's does.
+             * We want this instruction to be right at the end of the method, in case modders want to override
+             * vanilla behaviour. Since most of the vanilla methods set values that are picked up by other methods
+             * later, putting our method call after theirs is perfect.
              */
 
             #endregion
 
             foreach (var instr in instructions)
             {
-                if (instr.opcode == OpCodes.Callvirt) // Can't cast operand to MethodInfo without checking.
-                {
-                    if ((MethodInfo)instr.operand == methodPaused) // Paused only.
-                    {
-                        yield return new CodeInstruction(OpCodes.Ldarg_0);
-                        yield return new CodeInstruction(OpCodes.Call,
-                            AccessTools.Method(typeof(Keybind), nameof(Keybind.EventUpdatePaused))
-                        );
-                    }
-
-                    if ((MethodInfo)instr.operand == methodNonPaused) // Not paused.
-                    {
-                        yield return new CodeInstruction(OpCodes.Ldarg_0);
-                        yield return new CodeInstruction(OpCodes.Call,
-                            AccessTools.Method(typeof(Keybind), nameof(Keybind.EventUpdate))
-                        );
-                    }
-                }
-
                 yield return instr;
+
+                if (instr.opcode == OpCodes.Callvirt && (MethodInfo)instr.operand == targetMethod) // callvirt this.InputInteract()
+                {
+                    yield return new CodeInstruction(OpCodes.Ldarg_0); // ldarg.0
+
+                    yield return new CodeInstruction(OpCodes.Call,
+                        AccessTools.Method(typeof(KeybindRegistry), nameof(KeybindRegistry.UpdateAll))
+                    ); // call KeybindRegistry.UpdateAll(this)
+                }
             }
         }
     }

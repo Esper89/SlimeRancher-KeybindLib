@@ -6,6 +6,19 @@ Check out [`Main.cs`](./Main.cs) for the mod's entry point, [`Keybinds.cs`](./Ke
 
 If you have any questions, feel free to message me on Discord (`Esper#8989`) or matrix (`@esper89:matrix.org`).
 
+## Features
+(For testing purposes)
+
+ - `key.test` (Test, `T`): Creates messages in the console when pressed, held down, released, and repeated.
+
+ - `key.jest` (Jest, `J`): Tries (and fails) to start your jetpack, causing a small loss of energy.
+
+ - `key.kest` (Kest, `K`): Does nothing at all. Has no translations either. "Kest" isn't even a word.
+
+ - `key.vest` (Vest, `V`): Makes you start running.
+
+ - `key.nest` (Nest, `N`): Causes you to jump, but does not start the jetpack. Does not require you to press it again to jump again.
+
 ## License
     Copyright (c) 2021 Esper Thomson
 
