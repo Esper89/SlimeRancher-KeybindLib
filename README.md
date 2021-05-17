@@ -124,7 +124,7 @@ Also, KeybindLib is a library mod, so it doesn't change any gameplay mechanics o
 
 ### Building
 
-KeybindLib's build system is in the [`build`](./build) directory. See the readme there for a guide to building KeybindLib.
+KeybindLib's build system is in the [`build`](./build) directory. See [`build/README.md`](./build/README.md) for a guide to building KeybindLib.
 
 ## License
 

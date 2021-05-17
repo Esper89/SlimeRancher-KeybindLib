@@ -19,6 +19,8 @@ If you have any questions, feel free to message me on Discord (`Esper#8989`) or 
 
  - `key.nest` (Nest, `N`): Causes you to jump, but does not start the jetpack. Does not require you to press it again to jump again.
 
+ - `key.jump` (Jump, `Space`): The vanilla jump action, but it prints `Thanks for jumping!` in the console upon release.
+
 ## License
     Copyright (c) 2021 Esper Thomson
 
