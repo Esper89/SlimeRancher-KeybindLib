@@ -130,7 +130,7 @@ dotnet_diagnostic.IDE0076.severity = warning # Remove invalid global 'SuppressMe
 
 ## Formatting (IDE0055)
 dotnet_sort_system_directives_first = true
-dotnet_separate_import_directive_groups = true
+dotnet_separate_import_directive_groups = false
 
 ## Naming (IDE1006)
 

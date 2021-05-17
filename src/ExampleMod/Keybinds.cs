@@ -10,17 +10,17 @@ namespace ExampleMod
     {
         public static Keybind Test { get; }                     // A property to hold this keybind.
             = new Keybind(                                      // Create a new keybind.
-                name: "key.test",                               // The name of this keybind, must start with "key.".
+                name: "key.test",                               // The name of this keybind, must start with `key.`.
                 defaultBindings: new Bind[]                     // This keybind's default bindings, in the order they should be applied. Optional.
-                {
+                {                                               //
                     Key.T                                       // Can be of type `InControl.Key`, `InControl.Mouse`, or `InControl.InputControlType`.
-                },
+                },                                              //
                 comesBefore: "key.reportissue",                 // The key that this keybind should come immidiately before in the list. Can be `Keybind.BEGINNING_OF_LIST` for the start of the list. Optional.
                 translations: new Dictionary<Lang, string>      // This keybind's translations. Optional.
-                {
+                {                                               //
                     [Lang.EN] = "Test",                         // If the Translation API isn't installed, only `Lang.EN` will be used.
-                    [Lang.ES] = "Probar",
-                }
+                    [Lang.ES] = "Probar",                       // WARNING: Translation API support is currently broken and has been disabled!
+                }                                               //
             );
 
         public static Keybind Jest { get; }

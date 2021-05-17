@@ -122,7 +122,7 @@ namespace KeybindLib
                     .DefineMethod(name(), MethodAttributes.Public)
                     .GetILGenerator();
 
-                // Who do I need to create a whole-ass assembly just to get an ILGenerator?
+                // Why do I need to create a whole-ass assembly just to get an ILGenerator?
             }
         }
     }

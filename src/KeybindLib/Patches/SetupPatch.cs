@@ -19,7 +19,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
-using IEnumCInstr = System.Collections.Generic.IEnumerable<HarmonyLib.CodeInstruction>;
+using Instrs = System.Collections.Generic.IEnumerable<HarmonyLib.CodeInstruction>;
 using Reg = KeybindLib.KeybindRegistry;
 
 namespace KeybindLib.Patches
@@ -29,22 +29,22 @@ namespace KeybindLib.Patches
         [HarmonyPatch(typeof(OptionsUI), nameof(OptionsUI.SetupInput))]
         internal static class KeyboardSetupPatch // Options menu.
         {
-            internal static IEnumCInstr Transpiler(IEnumCInstr instructions)
+            internal static Instrs Transpiler(Instrs instructions)
                 => Transpile(instructions);
         }
 
         [HarmonyPatch(typeof(GamepadPanel), nameof(GamepadPanel.SetupBindings))]
         internal static class GamepadSetupPatch // Gamepad panel.
         {
-            internal static IEnumCInstr Transpiler(IEnumCInstr instructions)
+            internal static Instrs Transpiler(Instrs instructions)
                 => Transpile(instructions);
         }
 
-        private static IEnumCInstr Transpile(IEnumCInstr instructions) // Godspeed.
+        private static Instrs Transpile(Instrs instructions) // Godspeed.
         {
             MethodInfo method = AccessTools.Method(typeof(SetupPatch), nameof(CreateBindingLines));
 
-            IEnumCInstr InsertCall(OpCode opcode, object? operand = null)
+            Instrs InsertCall(OpCode opcode, object? operand = null)
             {
                 yield return new CodeInstruction(OpCodes.Ldarg_0);
                 yield return new CodeInstruction(opcode, operand);
@@ -117,9 +117,8 @@ namespace KeybindLib.Patches
                stloc.3
                ...
 
-             * And that's how this transpiler works. I figured the source code was the most appropriate place to
-             * write an explanation, as it is always where it needs to be and can be modified when necessary. If you
-             * make changes to this transpiler, please also update this explanation.
+             * And that's how this transpiler works. I hope that this helped you out, if you're looking through here
+             * and trying to improve (or more likely debug) this.
              */
 
             #endregion

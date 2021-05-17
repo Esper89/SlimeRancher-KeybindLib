@@ -20,7 +20,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using InControl;
+#if TRSL_API
 using SRML;
+#endif
 using SRML.SR;
 using static MessageDirector;
 
@@ -30,51 +32,35 @@ namespace KeybindLib
     /// <seealso cref="KeybindRegistry"/>
     public class Keybind
     {
-        #region constructors
-
         /// <summary> Creates a new <see cref="Keybind"/>. </summary>
         /// <param name="name"> The name of this instance. </param>
         /// <param name="defaultBindings"> The default keybinds that apply to this instance. </param>
         /// <param name="comesBefore"> The keybind that this one should come before. </param>
         /// <param name="translations"> The translations that apply to this instance. </param>
+        /// <param name="keyPressed"> The <see cref="KeyAction"/> to run when this key is pressed. </param>
+        /// <param name="keyReleased"> The <see cref="KeyAction"/> to run when this key is released. </param>
+        /// <param name="keyRepeated"> The <see cref="KeyAction"/> to run every frame if this key is down. </param>
         public Keybind(
             string name,
             Bind[]? defaultBindings = null,
             string? comesBefore = null,
-            Dictionary<Lang, string>? translations = null
+            Dictionary<Lang, string>? translations = null,
+            KeyAction? keyPressed = null,
+            KeyAction? keyReleased = null,
+            KeyAction? keyRepeated = null
         )
         {
-            this.DefaultBindings = defaultBindings ?? new Bind[] { };
             this.Name = name + Keybind.DEBUG_SUFFIX;
+            this.DefaultBindings = defaultBindings ?? new Bind[] { };
             this.ComesBefore = comesBefore;
             this.Translations = translations ?? new Dictionary<Lang, string> { };
+            this.KeyPressed = keyPressed ?? ((player) => { });
+            this.KeyReleased = keyReleased ?? ((player) => { });
+            this.KeyRepeated = keyRepeated ?? ((player) => { });
         }
-
-        /// <summary> Creates a new <see cref="Keybind"/>. </summary>
-        /// <param name="name"> The name of this instance. </param>
-        /// <param name="translation"> The english translation for this instance. </param>
-        /// <param name="defaultBindings"> The default keybinds that apply to this instance. </param>
-        /// <param name="comesBefore"> The keybind that this one should come before. </param>
-        public Keybind(
-            string name,
-            string? translation,
-            Bind[]? defaultBindings = null,
-            string? comesBefore = null
-        )
-        {
-            this.DefaultBindings = defaultBindings ?? new Bind[] { };
-            this.Name = name + Keybind.DEBUG_SUFFIX;
-            this.ComesBefore = comesBefore;
-            this.Translations = new Dictionary<Lang, string>
-            {
-                [Lang.EN] = translation ?? ""
-            };
-        }
-
-        #endregion
 
         /// <summary> This instance's name. </summary>
-        /// <remarks> Must start with "key.". </remarks>
+        /// <remarks> Must start with `key.`. </remarks>
         public virtual string Name { get; }
 
         /// <summary> The default <see cref="Bind"/>s for this instance. </summary>
@@ -105,6 +91,63 @@ namespace KeybindLib
         internal const string DEBUG_SUFFIX = ""; // Empty, to be unintrusive.
 #endif
 
+        #region events
+
+        /// <summary> A delegate that runs when something happens with a keybind. </summary>
+        public delegate void KeyAction(vp_FPPlayerEventHandler player);
+
+        /// <summary> Occurs when this instance's key is pressed. </summary>
+        public event KeyAction KeyPressed;
+
+        /// <summary> Occurs when this instance's key is released. </summary>
+        public event KeyAction KeyReleased;
+
+        /// <summary> Occurs every frame that this instance's key remains down for. </summary>
+        public event KeyAction KeyRepeated;
+
+        /// <summary> Occurs every frame, when player inputs are to be updated. </summary>
+        /// <remarks> Does not occur when the game is paused or when player inputs are disabled. </remarks>
+        public static event KeyAction Update = (player) => { };
+
+        /// <summary> Occurs every frame (even when the game is paused), when player inputs are to be updated. </summary>
+        /// <remarks> Occurs even if player inputs are disabled. </remarks>
+        public static event KeyAction UpdatePaused = (player) => { };
+
+        internal void UpdateEvents(vp_FPPlayerEventHandler player)
+        {
+            if (this.Action.WasPressed)
+            {
+                this.KeyPressed(player);
+            }
+
+            if (this.Action.WasReleased)
+            {
+                this.KeyRepeated(player);
+            }
+
+            if (this.Action.WasRepeated)
+            {
+                this.KeyRepeated(player);
+            }
+        }
+
+        internal static void EventUpdate(vp_FPInput instance)
+        {
+            Keybind.Update(instance.FPPlayer);
+
+            foreach (Keybind keybind in KeybindRegistry.keybinds)
+            {
+                keybind.UpdateEvents(instance.FPPlayer);
+            }
+        }
+
+        internal static void EventUpdatePaused(vp_FPInput instance)
+        {
+            Keybind.UpdatePaused(instance.FPPlayer);
+        }
+
+        #endregion
+
         /// <summary> This instance's <seealso cref="PlayerAction"/>. </summary>
         /// <exception cref="KeybindNotReadyException"> Thrown when this is accessed before the Load step. </exception>
         public PlayerAction Action
@@ -133,10 +176,12 @@ namespace KeybindLib
         /// <remarks> Only registers english translations if the Translation API isn't available. </remarks>
         protected internal virtual void RegisterTranslations()
         {
-            // FIXME Translation API Support
+            // TODO Translation API Support
             // For some reason unknown to me, the translation API isn't working as expected.
+            // I've disabled it until I can get it working. Define the `TRSL_API` symbol to enable it.
 
-            /*if (SRModLoader.IsModPresent("translationapi"))
+#if TRSL_API
+            if (SRModLoader.IsModPresent("translationapi"))
             {
                 foreach (KeyValuePair<Lang, string> translation in this.Translations)
                 {
@@ -147,8 +192,8 @@ namespace KeybindLib
                 }
             }
             else
-            {*/
-
+            {
+#endif
             if (this.Translations.TryGetValue(Lang.EN, out string value))
             {
                 this.RegisterTranslationWithSRML(value + Keybind.DEBUG_SUFFIX);
@@ -160,13 +205,15 @@ namespace KeybindLib
                     Keybind.DEBUG_SUFFIX
                 );
             }
-
-            //}
+#if TRSL_API
+            }
+#endif
         }
 
         private void RegisterTranslationWithSRML(string value)
             => TranslationPatcher.AddUITranslation(this.Name, value);
 
+#if TRSL_API
         private void RegisterTranslationWithAPI(Lang language, string value) // Separate method to prevent FileNotFoundException.
             => TranslationAPI.TranslationUtil.RegisterTranslation(
                 selectedLang: language,
@@ -174,6 +221,7 @@ namespace KeybindLib
                 key: this.Name,
                 value: value
             );
+#endif
 
         /// <summary> An exception thrown when <see cref="Action"/> is accessed before it is ready. </summary>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
