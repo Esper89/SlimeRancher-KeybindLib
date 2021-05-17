@@ -16,7 +16,7 @@
   - [#ctor()](#M-KeybindLib-Bind-KeyBind-#ctor-InControl-Key- 'KeybindLib.Bind.KeyBind.#ctor(InControl.Key)')
   - [BindDefault()](#M-KeybindLib-Bind-KeyBind-BindDefault-InControl-PlayerAction- 'KeybindLib.Bind.KeyBind.BindDefault(InControl.PlayerAction)')
 - [Keybind](#T-KeybindLib-Keybind 'KeybindLib.Keybind')
-  - [#ctor(name,defaultBindings,comesBefore,translations,keyPressed,keyReleased,keyDownUpdate)](#M-KeybindLib-Keybind-#ctor-System-String,KeybindLib-Bind[],System-String,System-Collections-Generic-Dictionary{MessageDirector-Lang,System-String},KeybindLib-Keybind-KeyAction,KeybindLib-Keybind-KeyAction,KeybindLib-Keybind-KeyAction- 'KeybindLib.Keybind.#ctor(System.String,KeybindLib.Bind[],System.String,System.Collections.Generic.Dictionary{MessageDirector.Lang,System.String},KeybindLib.Keybind.KeyAction,KeybindLib.Keybind.KeyAction,KeybindLib.Keybind.KeyAction)')
+  - [#ctor(name,comesBefore,defaultBinding,defaultBindings,translation,translations,keyPressed,keyReleased,keyDownUpdate)](#M-KeybindLib-Keybind-#ctor-System-String,System-String,KeybindLib-Bind,KeybindLib-Bind[],System-String,System-Collections-Generic-Dictionary{MessageDirector-Lang,System-String},KeybindLib-Keybind-KeyAction,KeybindLib-Keybind-KeyAction,KeybindLib-Keybind-KeyAction- 'KeybindLib.Keybind.#ctor(System.String,System.String,KeybindLib.Bind,KeybindLib.Bind[],System.String,System.Collections.Generic.Dictionary{MessageDirector.Lang,System.String},KeybindLib.Keybind.KeyAction,KeybindLib.Keybind.KeyAction,KeybindLib.Keybind.KeyAction)')
   - [BEGINNING_OF_LIST](#F-KeybindLib-Keybind-BEGINNING_OF_LIST 'KeybindLib.Keybind.BEGINNING_OF_LIST')
   - [KEYBIND_PREFIX](#F-KeybindLib-Keybind-KEYBIND_PREFIX 'KeybindLib.Keybind.KEYBIND_PREFIX')
   - [Action](#P-KeybindLib-Keybind-Action 'KeybindLib.Keybind.Action')
@@ -205,8 +205,8 @@ A keybind.
 
 - [KeybindLib.KeybindRegistry](#T-KeybindLib-KeybindRegistry 'KeybindLib.KeybindRegistry')
 
-<a name='M-KeybindLib-Keybind-#ctor-System-String,KeybindLib-Bind[],System-String,System-Collections-Generic-Dictionary{MessageDirector-Lang,System-String},KeybindLib-Keybind-KeyAction,KeybindLib-Keybind-KeyAction,KeybindLib-Keybind-KeyAction-'></a>
-### #ctor(name,defaultBindings,comesBefore,translations,keyPressed,keyReleased,keyDownUpdate) `constructor`
+<a name='M-KeybindLib-Keybind-#ctor-System-String,System-String,KeybindLib-Bind,KeybindLib-Bind[],System-String,System-Collections-Generic-Dictionary{MessageDirector-Lang,System-String},KeybindLib-Keybind-KeyAction,KeybindLib-Keybind-KeyAction,KeybindLib-Keybind-KeyAction-'></a>
+### #ctor(name,comesBefore,defaultBinding,defaultBindings,translation,translations,keyPressed,keyReleased,keyDownUpdate) `constructor`
 
 ##### Summary
 
@@ -217,9 +217,11 @@ Creates a new [Keybind](#T-KeybindLib-Keybind 'KeybindLib.Keybind').
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | name | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The name of this instance. |
-| defaultBindings | [KeybindLib.Bind[]](#T-KeybindLib-Bind[] 'KeybindLib.Bind[]') | The default keybinds that apply to this instance. |
 | comesBefore | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The keybind that this one should come before. |
-| translations | [System.Collections.Generic.Dictionary{MessageDirector.Lang,System.String}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{MessageDirector.Lang,System.String}') | The translations that apply to this instance. |
+| defaultBinding | [KeybindLib.Bind](#T-KeybindLib-Bind 'KeybindLib.Bind') | The default keybind that applies to this instance. |
+| defaultBindings | [KeybindLib.Bind[]](#T-KeybindLib-Bind[] 'KeybindLib.Bind[]') | The default keybinds that apply to this instance. Overrides `defaultBinding`. |
+| translation | [System.String](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.String 'System.String') | The english translation for this instance. |
+| translations | [System.Collections.Generic.Dictionary{MessageDirector.Lang,System.String}](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Collections.Generic.Dictionary 'System.Collections.Generic.Dictionary{MessageDirector.Lang,System.String}') | The translations that apply to this instance. Overrides `translation`. |
 | keyPressed | [KeybindLib.Keybind.KeyAction](#T-KeybindLib-Keybind-KeyAction 'KeybindLib.Keybind.KeyAction') | The [KeyAction](#T-KeybindLib-Keybind-KeyAction 'KeybindLib.Keybind.KeyAction') to run when this key is pressed. |
 | keyReleased | [KeybindLib.Keybind.KeyAction](#T-KeybindLib-Keybind-KeyAction 'KeybindLib.Keybind.KeyAction') | The [KeyAction](#T-KeybindLib-Keybind-KeyAction 'KeybindLib.Keybind.KeyAction') to run when this key is released. |
 | keyDownUpdate | [KeybindLib.Keybind.KeyAction](#T-KeybindLib-Keybind-KeyAction 'KeybindLib.Keybind.KeyAction') | The [KeyAction](#T-KeybindLib-Keybind-KeyAction 'KeybindLib.Keybind.KeyAction') to run every frame if this key is down. |

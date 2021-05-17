@@ -18,5 +18,6 @@
     <None Include=".editorconfig" />
     <None Include="configure" />
     <None Include="Makefile" />
+    <None Include="README.md" />
   </ItemGroup>
 </Project>

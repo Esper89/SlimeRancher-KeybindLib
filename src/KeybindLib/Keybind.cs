@@ -32,16 +32,20 @@ namespace KeybindLib
     {
         /// <summary> Creates a new <see cref="Keybind"/>. </summary>
         /// <param name="name"> The name of this instance. </param>
-        /// <param name="defaultBindings"> The default keybinds that apply to this instance. </param>
         /// <param name="comesBefore"> The keybind that this one should come before. </param>
-        /// <param name="translations"> The translations that apply to this instance. </param>
+        /// <param name="defaultBinding"> The default keybind that applies to this instance. </param>
+        /// <param name="defaultBindings"> The default keybinds that apply to this instance. Overrides <paramref name="defaultBinding"/>. </param>
+        /// <param name="translation"> The english translation for this instance. </param>
+        /// <param name="translations"> The translations that apply to this instance. Overrides <paramref name="translation"/>. </param>
         /// <param name="keyPressed"> The <see cref="KeyAction"/> to run when this key is pressed. </param>
         /// <param name="keyReleased"> The <see cref="KeyAction"/> to run when this key is released. </param>
         /// <param name="keyDownUpdate"> The <see cref="KeyAction"/> to run every frame if this key is down. </param>
         public Keybind(
             string name,
-            Bind[]? defaultBindings = null,
             string? comesBefore = null,
+            Bind? defaultBinding = null,
+            Bind[]? defaultBindings = null,
+            string? translation = null,
             Dictionary<Lang, string>? translations = null,
             KeyAction? keyPressed = null,
             KeyAction? keyReleased = null,
@@ -49,9 +53,24 @@ namespace KeybindLib
         )
         {
             this.Name = name + Keybind.DEBUG_SUFFIX;
-            this.DefaultBindings = defaultBindings ?? new Bind[] { };
             this.ComesBefore = comesBefore;
-            this.Translations = translations ?? new Dictionary<Lang, string> { };
+
+            this.DefaultBindings = defaultBindings ?? (
+                defaultBinding is object ?
+                    new[] { defaultBinding } :
+                    new Bind[] { }
+            );
+
+
+            this.Translations = translations ?? (
+                translation is object ?
+                    new Dictionary<Lang, string>
+                    {
+                        [Lang.EN] = translation
+                    } :
+                    new Dictionary<Lang, string> { }
+            );
+
             this.KeyPressed = keyPressed ?? ((_) => { });
             this.KeyReleased = keyReleased ?? ((_) => { });
             this.KeyDownUpdate = keyDownUpdate ?? ((_) => { });
