@@ -34,6 +34,11 @@ namespace KeybindLib
         /// <seealso cref="Register(IEnumerable{Keybind})"/>
         public static void Register(Keybind keybind)
         {
+            if (Main.hasPreloaded)
+            {
+                throw new KeybindRegisteredTooLateException(keybind);
+            }
+
             Reg.ValidateKeybind(keybind);
 
             Reg.registeredNames.Add(keybind.Name);
@@ -61,25 +66,38 @@ namespace KeybindLib
         /// <param name="playerAction"> The <see cref="PlayerAction"/> to register this for. </param>
         /// <param name="keyAction"> The <see cref="Keybind.KeyAction"/> to run when the key is pressed. </param>
         /// <param name="keyReleased"> If set to true, runs when the key is released instead of when it's pressed. </param>
+        /// <exception cref="KeyActionRegisteredTooEarlyException"> Thrown when this method is called before PreLoad. </exception>
+        /// <remarks> You cannot register a <see cref="Keybind.KeyAction"/> until after the PreLoad step. </remarks>
         public static void RegisterKeyAction(PlayerAction playerAction, Keybind.KeyAction keyAction, bool keyReleased = false)
         {
+            if (!Main.hasPreloaded)
+            {
+                throw new KeyActionRegisteredTooEarlyException(keyAction);
+            }
+
             Reg.Update += (p) =>
             {
-                if (keyReleased ? playerAction.WasPressed : playerAction.WasReleased)
+                if (keyReleased ? playerAction.WasReleased : playerAction.WasPressed)
                 {
                     keyAction(p);
                 }
             };
         }
 
-
         internal static void UpdateAll(vp_FPInput instance)
         {
-            Reg.Update(instance.FPPlayer);
-
-            foreach (Keybind keybind in KeybindRegistry.keybinds)
+            try
             {
-                keybind.Update(instance.FPPlayer);
+                Reg.Update(instance.FPPlayer);
+
+                foreach (Keybind keybind in KeybindRegistry.keybinds)
+                {
+                    keybind.Update(instance.FPPlayer);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Write(ex);
             }
         }
 
@@ -133,9 +151,9 @@ namespace KeybindLib
 
         private static void ValidateKeybind(Keybind keybind)
         {
-            if (Main.hasPreloaded)
+            if (!keybind.Name.StartsWith(Keybind.KEYBIND_PREFIX))
             {
-                throw new KeybindRegisteredTooLateException(keybind);
+                throw new KeybindInvalidException(keybind, KeybindInvalidException.Reason.NameMissingPrefix);
             }
             else if (Reg.registeredNames.Contains(keybind.Name) ||
                 MethodKeybindExtractor.VanillaKeybinds.Contains(keybind.Name))
@@ -163,10 +181,10 @@ namespace KeybindLib
             internal KeybindInvalidException(Keybind keybind, Reason reason) : base(
                 $@"Attempted to register keybind {reason switch
                 {
-                    Reason.NameMissingPrefix => $" with an invalid name ({keybind.Name}). Keybind names must start with \"{ Keybind.KEYBIND_PREFIX }\".",
-                    Reason.NameTaken => $"with existing name ({keybind.Name}). Cannot register duplicate keybind.",
-                    Reason.ComesBeforeMissing => $"at a nonexistant point in the keybind list ({keybind.ComesBefore}).",
-                    _ => throw new ArgumentOutOfRangeException(nameof(reason))
+                    Reason.NameMissingPrefix => $"with an invalid name ('{keybind.Name}'). Keybind names must start with '{Keybind.KEYBIND_PREFIX }'!",
+                    Reason.NameTaken => $"with existing name ('{keybind.Name}'). Cannot register duplicate keybind.",
+                    Reason.ComesBeforeMissing => $"at a nonexistant point in the keybind list ('{keybind.ComesBefore}').",
+                    _ => throw new ArgumentOutOfRangeException(nameof(reason)) // What.
                 }}"
             )
             {
@@ -182,8 +200,7 @@ namespace KeybindLib
         public sealed class KeybindRegisteredTooLateException : InvalidOperationException
         {
             internal KeybindRegisteredTooLateException(Keybind keybind) : base(
-                $"Attempted to register {nameof(KeybindLib.Keybind)} after {nameof(Main.PreLoad)}. " +
-                $"Make sure {nameof(KeybindLib)} is in your mod's 'load_before' in your modinfo.json"
+                $"Attempted to register {nameof(KeybindLib.Keybind)} after {nameof(Main.PreLoad)}."
             )
             {
                 this.Keybind = keybind;
@@ -191,6 +208,21 @@ namespace KeybindLib
 
             /// <summary> The <see cref="Keybind"/> that was registered too late. </summary>
             public Keybind Keybind { get; }
+        }
+
+        /// <summary> An exception thrown when a <see cref="Keybind.KeyAction"/> is registered before this mod has been PreLoaded. </summary>
+        [EditorBrowsable(EditorBrowsableState.Advanced)]
+        public sealed class KeyActionRegisteredTooEarlyException : InvalidOperationException
+        {
+            internal KeyActionRegisteredTooEarlyException(Keybind.KeyAction keyAction) : base(
+                $"Attempted to register {nameof(Keybind.KeyAction)} before {nameof(Main.PreLoad)}."
+            )
+            {
+                this.KeyAction = keyAction;
+            }
+
+            /// <summary> The <see cref="KeyAction"/> that was registered too early. </summary>
+            public Keybind.KeyAction KeyAction { get; }
         }
 
         #endregion

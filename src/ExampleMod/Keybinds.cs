@@ -137,21 +137,11 @@ namespace ExampleMod
 
             KeybindRegistry.Update += (_) =>                        // Add an action to run every frame (when accepting input).
             {
-                if (Keybinds.Test.Action?.WasRepeated ?? false)     // `Keybind.Action` is nullable, because it isn't present before PreLoad. To be safe, use `!.` instead of `?.` in `KeybindRegistry.Update` handlers.
+                if (Keybinds.Test.Action?.WasRepeated ?? false)     // `Keybind.Action` is nullable, because it isn't present before PreLoad. To be safe, use `?.` instead of `!.` or `.` in `KeybindRegistry.Update` handlers.
                 {                                                   // You don't need to worry about `Keybind.Action` being null in the keybind's own events, as those will only be called if it's non-null.
                     Console.Log("Test repeated!");
                 }
             };
-
-            KeybindRegistry.RegisterKeyAction(                      // Add an action to run when a `PlauerAction` is activated. For `PlayerAction`s that don't have a corresponding `Keybind`, like vanilla ones.
-                SRInput.Actions.jump,
-                (player) =>                                         // They `KeyAction` to run.
-                {
-                    Console.Log("Thanks for jumping!");
-                    player.Run.TryStart();
-                },
-                keyReleased: true                                   // Make it run when the key is released instead of pressed.
-            );
         }
     }
 }

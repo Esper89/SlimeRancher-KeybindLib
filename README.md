@@ -98,6 +98,8 @@ KeybindLib has other useful features, like multiple default keybinds, multiple t
 
  - Events that run on key press, key release, and every frame that they key is down.
 
+ - Attaching delegates to vanilla actions.
+
  - An event that runs every frame that keybinds are updated.
 
  - A HashSet of all vanilla keybinds and their internal names.
