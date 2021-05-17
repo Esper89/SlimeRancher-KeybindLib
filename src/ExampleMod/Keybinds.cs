@@ -22,15 +22,15 @@ namespace ExampleMod
                     [Lang.EN] = "Test",                             // If the Translation API isn't installed, only `Lang.EN` will be used.
                     [Lang.ES] = "Probar",                           // WARNING: Translation API support is currently broken and has been disabled!
                 },
-                keyPressed: (player) =>                             // This will run when the key is pressed.
-                {                                                   // The `player` parameter is the current `vp_FPPlayerEventHandler` instance.
+                keyPressed: (_) =>                                  // This will run when the key is pressed.
+                {                                                   // The first parameter (`player` when in use, here it uses a discard `_`) is the current `vp_FPPlayerEventHandler` instance.
                     Console.Log("Test pressed!");
                 },
-                keyReleased: (player) =>                            // This will run when the key is released.
+                keyReleased: (_) =>                                 // This will run when the key is released.
                 {
                     Console.Log("Test released!");
                 },
-                keyDownUpdate: (player) =>                          // This will run every frame that they key is down.
+                keyDownUpdate: (_) =>                               // This will run every frame that they key is down.
                 {                                                   // Be careful not to put too much stuff in here, or it could slow down the game.
                     Console.Log("Test is down!");
                 }                                                   // Those three actions can have things added to and removed from them dynamically via the keybind's corresponding event.
@@ -126,13 +126,23 @@ namespace ExampleMod
                 Keybinds.Nest
             });
 
-            KeybindRegistry.Update += (player) =>                   // Add an action to run every frame (when accepting input).
+            KeybindRegistry.Update += (_) =>                        // Add an action to run every frame (when accepting input).
             {
                 if (Keybinds.Test.Action?.WasRepeated ?? false)     // `Keybind.Action` is nullable, because it isn't present before PreLoad. To be safe, use `!.` instead of `?.` in `KeybindRegistry.Update` handlers.
                 {                                                   // You don't need to worry about `Keybind.Action` being null in the keybind's own events, as those will only be called if it's non-null.
                     Console.Log("Test repeated!");
                 }
             };
+
+            KeybindRegistry.RegisterKeyAction(                      // Add an action to run when a `PlauerAction` is activated. For `PlayerAction`s that don't have a corresponding `Keybind`, like vanilla ones.
+                SRInput.Actions.jump,
+                (player) =>                                         // They `KeyAction` to run.
+                {
+                    Console.Log("Thanks for jumping!");
+                    player.Run.TryStart();
+                },
+                keyReleased: true                                   // Make it run when the key is released instead of pressed.
+            );
         }
     }
 }

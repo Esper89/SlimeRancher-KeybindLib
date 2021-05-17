@@ -34,6 +34,7 @@
 - [KeybindRegistry](#T-KeybindLib-KeybindRegistry 'KeybindLib.KeybindRegistry')
   - [Register(keybind)](#M-KeybindLib-KeybindRegistry-Register-KeybindLib-Keybind- 'KeybindLib.KeybindRegistry.Register(KeybindLib.Keybind)')
   - [Register(keybinds)](#M-KeybindLib-KeybindRegistry-Register-System-Collections-Generic-IEnumerable{KeybindLib-Keybind}- 'KeybindLib.KeybindRegistry.Register(System.Collections.Generic.IEnumerable{KeybindLib.Keybind})')
+  - [RegisterKeyAction(playerAction,keyAction,keyReleased)](#M-KeybindLib-KeybindRegistry-RegisterKeyAction-InControl-PlayerAction,KeybindLib-Keybind-KeyAction,System-Boolean- 'KeybindLib.KeybindRegistry.RegisterKeyAction(InControl.PlayerAction,KeybindLib.Keybind.KeyAction,System.Boolean)')
 - [Main](#T-KeybindLib-Main 'KeybindLib.Main')
   - [PreLoad()](#M-KeybindLib-Main-PreLoad 'KeybindLib.Main.PreLoad')
 - [MethodKeybindExtractor](#T-KeybindLib-MethodKeybindExtractor 'KeybindLib.MethodKeybindExtractor')
@@ -423,6 +424,21 @@ Registers a collection of [Keybind](#T-KeybindLib-Keybind 'KeybindLib.Keybind')s
 ##### See Also
 
 - [KeybindLib.KeybindRegistry.Register](#M-KeybindLib-KeybindRegistry-Register-KeybindLib-Keybind- 'KeybindLib.KeybindRegistry.Register(KeybindLib.Keybind)')
+
+<a name='M-KeybindLib-KeybindRegistry-RegisterKeyAction-InControl-PlayerAction,KeybindLib-Keybind-KeyAction,System-Boolean-'></a>
+### RegisterKeyAction(playerAction,keyAction,keyReleased) `method`
+
+##### Summary
+
+Registers a [KeyAction](#T-KeybindLib-Keybind-KeyAction 'KeybindLib.Keybind.KeyAction') for a [PlayerAction](#T-InControl-PlayerAction 'InControl.PlayerAction') that doesn't have it's own [Keybind](#T-KeybindLib-Keybind 'KeybindLib.Keybind').
+
+##### Parameters
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| playerAction | [InControl.PlayerAction](#T-InControl-PlayerAction 'InControl.PlayerAction') | The [PlayerAction](#T-InControl-PlayerAction 'InControl.PlayerAction') to register this for. |
+| keyAction | [KeybindLib.Keybind.KeyAction](#T-KeybindLib-Keybind-KeyAction 'KeybindLib.Keybind.KeyAction') | The [KeyAction](#T-KeybindLib-Keybind-KeyAction 'KeybindLib.Keybind.KeyAction') to run when the key is pressed. |
+| keyReleased | [System.Boolean](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Boolean 'System.Boolean') | If set to true, runs when the key is released instead of when it's pressed. |
 
 <a name='T-KeybindLib-Main'></a>
 ## Main `type`

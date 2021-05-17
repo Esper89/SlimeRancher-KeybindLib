@@ -52,9 +52,9 @@ namespace KeybindLib
             this.DefaultBindings = defaultBindings ?? new Bind[] { };
             this.ComesBefore = comesBefore;
             this.Translations = translations ?? new Dictionary<Lang, string> { };
-            this.KeyPressed = keyPressed ?? ((player) => { });
-            this.KeyReleased = keyReleased ?? ((player) => { });
-            this.KeyDownUpdate = keyDownUpdate ?? ((player) => { });
+            this.KeyPressed = keyPressed ?? ((_) => { });
+            this.KeyReleased = keyReleased ?? ((_) => { });
+            this.KeyDownUpdate = keyDownUpdate ?? ((_) => { });
         }
 
         /// <summary> This instance's name. </summary>

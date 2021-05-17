@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using InControl;
 using Reg = KeybindLib.KeybindRegistry;
 
 namespace KeybindLib
@@ -54,7 +55,23 @@ namespace KeybindLib
 
         /// <summary> Occurs every frame when player inputs are to be updated. </summary>
         /// <remarks> Does not occur when the game is paused or when player inputs are disabled. </remarks>
-        public static event Keybind.KeyAction Update = (player) => { };
+        public static event Keybind.KeyAction Update = (_) => { };
+
+        /// <summary> Registers a <see cref="Keybind.KeyAction"/> for a <see cref="PlayerAction"/> that doesn't have it's own <see cref="Keybind"/>. </summary>
+        /// <param name="playerAction"> The <see cref="PlayerAction"/> to register this for. </param>
+        /// <param name="keyAction"> The <see cref="Keybind.KeyAction"/> to run when the key is pressed. </param>
+        /// <param name="keyReleased"> If set to true, runs when the key is released instead of when it's pressed. </param>
+        public static void RegisterKeyAction(PlayerAction playerAction, Keybind.KeyAction keyAction, bool keyReleased = false)
+        {
+            Reg.Update += (p) =>
+            {
+                if (keyReleased ? playerAction.WasPressed : playerAction.WasReleased)
+                {
+                    keyAction(p);
+                }
+            };
+        }
+
 
         internal static void UpdateAll(vp_FPInput instance)
         {
