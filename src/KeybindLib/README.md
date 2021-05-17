@@ -12,6 +12,8 @@
   - [#ctor()](#M-KeybindLib-Bind-ButtonBind-#ctor-InControl-InputControlType- 'KeybindLib.Bind.ButtonBind.#ctor(InControl.InputControlType)')
   - [BindDefault()](#M-KeybindLib-Bind-ButtonBind-BindDefault-InControl-PlayerAction- 'KeybindLib.Bind.ButtonBind.BindDefault(InControl.PlayerAction)')
 - [KeyAction](#T-KeybindLib-Keybind-KeyAction 'KeybindLib.Keybind.KeyAction')
+- [KeyActionRegisteredTooEarlyException](#T-KeybindLib-KeybindRegistry-KeyActionRegisteredTooEarlyException 'KeybindLib.KeybindRegistry.KeyActionRegisteredTooEarlyException')
+  - [KeyAction](#P-KeybindLib-KeybindRegistry-KeyActionRegisteredTooEarlyException-KeyAction 'KeybindLib.KeybindRegistry.KeyActionRegisteredTooEarlyException.KeyAction')
 - [KeyBind](#T-KeybindLib-Bind-KeyBind 'KeybindLib.Bind.KeyBind')
   - [#ctor()](#M-KeybindLib-Bind-KeyBind-#ctor-InControl-Key- 'KeybindLib.Bind.KeyBind.#ctor(InControl.Key)')
   - [BindDefault()](#M-KeybindLib-Bind-KeyBind-BindDefault-InControl-PlayerAction- 'KeybindLib.Bind.KeyBind.BindDefault(InControl.PlayerAction)')
@@ -156,6 +158,24 @@ Event handler.
 
 - [KeybindLib.Keybind.KeyPressed](#E-KeybindLib-Keybind-KeyPressed 'KeybindLib.Keybind.KeyPressed')
 - [KeybindLib.Keybind.KeyReleased](#E-KeybindLib-Keybind-KeyReleased 'KeybindLib.Keybind.KeyReleased')
+
+<a name='T-KeybindLib-KeybindRegistry-KeyActionRegisteredTooEarlyException'></a>
+## KeyActionRegisteredTooEarlyException `type`
+
+##### Namespace
+
+KeybindLib.KeybindRegistry
+
+##### Summary
+
+An exception thrown when a [KeyAction](#T-KeybindLib-Keybind-KeyAction 'KeybindLib.Keybind.KeyAction') is registered before this mod has been PreLoaded.
+
+<a name='P-KeybindLib-KeybindRegistry-KeyActionRegisteredTooEarlyException-KeyAction'></a>
+### KeyAction `property`
+
+##### Summary
+
+The [KeyAction](#P-KeybindLib-KeybindRegistry-KeyActionRegisteredTooEarlyException-KeyAction 'KeybindLib.KeybindRegistry.KeyActionRegisteredTooEarlyException.KeyAction') that was registered too early.
 
 <a name='T-KeybindLib-Bind-KeyBind'></a>
 ## KeyBind `type`
@@ -441,6 +461,16 @@ Registers a [KeyAction](#T-KeybindLib-Keybind-KeyAction 'KeybindLib.Keybind.KeyA
 | playerAction | [InControl.PlayerAction](#T-InControl-PlayerAction 'InControl.PlayerAction') | The [PlayerAction](#T-InControl-PlayerAction 'InControl.PlayerAction') to register this for. |
 | keyAction | [KeybindLib.Keybind.KeyAction](#T-KeybindLib-Keybind-KeyAction 'KeybindLib.Keybind.KeyAction') | The [KeyAction](#T-KeybindLib-Keybind-KeyAction 'KeybindLib.Keybind.KeyAction') to run when the key is pressed. |
 | keyReleased | [System.Boolean](http://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k:System.Boolean 'System.Boolean') | If set to true, runs when the key is released instead of when it's pressed. |
+
+##### Exceptions
+
+| Name | Description |
+| ---- | ----------- |
+| [KeybindLib.KeybindRegistry.KeyActionRegisteredTooEarlyException](#T-KeybindLib-KeybindRegistry-KeyActionRegisteredTooEarlyException 'KeybindLib.KeybindRegistry.KeyActionRegisteredTooEarlyException') | Thrown when this method is called before PreLoad. |
+
+##### Remarks
+
+You cannot register a [KeyAction](#T-KeybindLib-Keybind-KeyAction 'KeybindLib.Keybind.KeyAction') until after the PreLoad step.
 
 <a name='T-KeybindLib-Main'></a>
 ## Main `type`
