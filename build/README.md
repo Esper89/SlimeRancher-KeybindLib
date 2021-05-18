@@ -67,3 +67,5 @@ make install
 ```
 
 When building in `Release` mode, XML and markdown documentation are generated. The markdown documentation is copied to [`src/KeybindLib/README.md`](../src/KeybindLib/README.md) and committed by the GitHub Actions workflow.
+
+If you have any questions, feel free to message me on Discord (`Esper#8989`) or matrix (`@esper89:matrix.org`).

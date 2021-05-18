@@ -84,6 +84,8 @@ public class Main : ModEntryPoint                       // Your mod's entry poin
 
 KeybindLib has other useful features, like multiple default keybinds, multiple translations, `keyReleased` and `keyDownUpdate`, and more. To see examples of all of them, check out [`src/ExampleMod`](./src/ExampleMod). Every KeybindLib release comes with an `ExampleMod.zip` bundled with it.
 
+If you have any questions, feel free to message me on Discord (`Esper#8989`) or matrix (`@esper89:matrix.org`).
+
 ## Features
 
  - Adding new keybinds.
