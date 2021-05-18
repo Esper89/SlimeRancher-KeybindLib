@@ -114,7 +114,7 @@ KeybindLib has other useful features, like multiple default keybinds, multiple t
 
 ## Contributing
 
-Contributions of any kind - issues, pull requests, feature requests - are all welcome. You can submit suggestions and bug reports [as an issue](https://github.com/Esper89/SlimeRancher-KeybindLib/issues/new), or code contributions [as a pull request](https://github.com/Esper89/SlimeRancher-KeybindLib/pulls).
+Contributions of any kind - issues, pull requests, feature requests - are all welcome. You can submit suggestions and bug reports [as an issue](https://github.com/Esper89/SlimeRancher-KeybindLib/issues/new/choose), or code contributions [as a pull request](https://github.com/Esper89/SlimeRancher-KeybindLib/pulls).
 
 ### Scope
 
