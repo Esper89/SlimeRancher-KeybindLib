@@ -1,5 +1,5 @@
 # KeybindLib
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Esper89/SlimeRancher-KeybindLib/Mono)](https://github.com/Esper89/SlimeRancher-KeybindLib/actions/workflows/mono.yml) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/a2786a4c9aa14e9c98e047461a64b8a1)](https://www.codacy.com/gh/Esper89/SlimeRancher-KeybindLib/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Esper89/SlimeRancher-KeybindLib&amp;utm_campaign=Badge_Grade) [![Nonexistent Tests](https://img.shields.io/badge/tests-none-critical)]()
+[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/Esper89/SlimeRancher-KeybindLib/Mono)](https://github.com/Esper89/SlimeRancher-KeybindLib/actions/workflows/mono.yml) [![Codacy Badge](https://app.codacy.com/project/badge/Grade/a2786a4c9aa14e9c98e047461a64b8a1)](https://www.codacy.com/gh/Esper89/SlimeRancher-KeybindLib/dashboard) [![Nonexistent Tests](https://img.shields.io/badge/tests-none-critical)]()
 
 KeybindLib is a Slime Rancher library mod for adding new keybinds.
 
