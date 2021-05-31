@@ -11,7 +11,7 @@ If you want to use a mod that requires KeyebindLib, just place `KeybindLib.dll` 
 
 #### Releases
 
-You can download KeybindLib from the [releases page](https://github.com/Esper89/SlimeRancher-KeybindLib/releases/latest) (below the changelog).
+You can download KeybindLib from the [releases page](https://github.com/Esper89/SlimeRancher-KeybindLib/releases/latest) (below the changelog) or from [the Nexus page](https://www.nexusmods.com/slimerancher/mods/138) (in the "FILES" tab).
 
 #### Mod Conflicts
 
@@ -23,7 +23,7 @@ The following is for modders who want to use KeybindLib in your mod. Keep in min
 
 #### References
 
-You need to add `KeybindLib.dll` as a reference to your project, the same way you would add `SRML.dll` as described [on the wiki](https://github.com/veesusmikelheir/SRML/wiki/Project-Setup#importing-the-references). It's highly recommended to also have `KeybindLib.xml` in the same directory as `KeybindLib.dll`, as it will allow you to see KeybindLib's XML documentation whil you're programming.
+You need to add `KeybindLib.dll` as a reference to your project, the same way you would add `SRML.dll` as described [on the wiki](https://github.com/veesusmikelheir/SRML/wiki/Project-Setup#importing-the-references). It's highly recommended to also have `KeybindLib.xml` in the same directory as `KeybindLib.dll`, as it will allow you to see KeybindLib's XML documentation while you're programming.
 
 You will also need `InControl.dll` as a reference, because KeybindLib uses a few of the types from it.
 
@@ -48,6 +48,9 @@ You also need to add this mod as a dependency of your mod, and you'll need to ad
 ```
 
 If your mod can function without KeybindLib despite using some of it's features, you don't need to add it as a dependency, but it still needs to be in your mod's `load_before` list.
+
+#### Nexus
+If you publish your mod on nexus, it is recommended to add [KeybindLib](https://www.nexusmods.com/slimerancher/mods/138) as a required mod (in the "Requirements and mirrors" tab of the mod creation page), the same way you would add SRML. This will notify people downloading your mod that they need to download this mod as well.
 
 #### API
 
