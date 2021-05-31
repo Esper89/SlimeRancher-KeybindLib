@@ -3,8 +3,6 @@
 
 KeybindLib is a Slime Rancher library mod for adding new keybinds.
 
-**WARNING: KeybindLib is still in the process of being tested right now and is in pre-release.**
-
 ## Usage
 
 ### End Users
@@ -41,7 +39,7 @@ You also need to add this mod as a dependency of your mod, and you'll need to ad
   "description": "Allows you to air-dash!",
   "version": "1.0",
   "dependencies": [
-    "keybindlib"
+    "keybindlib 1.0"
   ],
   "load_before": [
     "keybindlib"

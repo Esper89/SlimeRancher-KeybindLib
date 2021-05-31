@@ -1,9 +1,9 @@
 {
   "id": "keybindlib-examplemod",
   "name": "KeybindLib Example Mod",
-  "version": "0.1",
+  "version": "1.0",
   "author": "Esper89",
   "description": "Example mod for testing KeybindLib.",
-  "dependencies": [ "keybindlib 0.1" ],
+  "dependencies": [ "keybindlib 1.0" ],
   "load_before": [ "keybindlib" ]
 }

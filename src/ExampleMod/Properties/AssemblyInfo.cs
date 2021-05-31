@@ -3,7 +3,7 @@ using System.Reflection;
 [assembly: AssemblyTitle("KeybindLib.ExampleMod")]
 [assembly: AssemblyCopyright("Esper Thomson")]
 [assembly: AssemblyDescription("A Slime Rancher mod for testing KeybindLib.")]
-[assembly: AssemblyVersion("0.1.*")]
+[assembly: AssemblyVersion("1.0.*")]
 
 #if DEBUG
 [assembly: AssemblyConfiguration("DEBUG")]
