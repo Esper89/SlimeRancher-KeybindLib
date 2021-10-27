@@ -182,8 +182,8 @@ namespace KeybindLib
                 $@"Attempted to register keybind {reason switch
                 {
                     Reason.NameMissingPrefix => $"with an invalid name ('{keybind.Name}'). Keybind names must start with '{Keybind.KEYBIND_PREFIX }'!",
-                    Reason.NameTaken => $"with existing name ('{keybind.Name}'). Cannot register duplicate keybind.",
-                    Reason.ComesBeforeMissing => $"at a nonexistant point in the keybind list ('{keybind.ComesBefore}').",
+                    Reason.NameTaken => $"with existing name ('{keybind.Name}'). Cannot register the same keybind twice. Cannot register two different keybinds with the same name.",
+                    Reason.ComesBeforeMissing => $"at a nonexistant point in the keybind list ('{keybind.ComesBefore}'). ComesBefore only supports vanilla keybinds.",
                     _ => throw new ArgumentOutOfRangeException(nameof(reason)) // What.
                 }}"
             )
@@ -200,7 +200,7 @@ namespace KeybindLib
         public sealed class KeybindRegisteredTooLateException : InvalidOperationException
         {
             internal KeybindRegisteredTooLateException(Keybind keybind) : base(
-                $"Attempted to register {nameof(KeybindLib.Keybind)} after {nameof(Main.PreLoad)}."
+                $"Attempted to register {nameof(KeybindLib.Keybind)} after {nameof(KeybindLib)}'s {nameof(Main.PreLoad)} step. You may need to add 'keybindlib' to your load_after list in modinfo.json."
             )
             {
                 this.Keybind = keybind;
@@ -215,7 +215,7 @@ namespace KeybindLib
         public sealed class KeyActionRegisteredTooEarlyException : InvalidOperationException
         {
             internal KeyActionRegisteredTooEarlyException(Keybind.KeyAction keyAction) : base(
-                $"Attempted to register {nameof(Keybind.KeyAction)} before {nameof(Main.PreLoad)}."
+                $"Attempted to register {nameof(Keybind.KeyAction)} before {nameof(KeybindLib)}'s {nameof(Main.PreLoad)} step. Please register {nameof(Keybind.KeyAction)}s during {nameof(Main.Load)} or after."
             )
             {
                 this.KeyAction = keyAction;
