@@ -184,20 +184,23 @@ namespace KeybindLib.Patches
                 throw new System.ArgumentException(nameof(keyName)); // If this happens I will be sad.
             }
 
-            foreach (Keybind keybind in keybinds)
+            if (instance is OptionsUI options)
             {
-                if (instance is OptionsUI)
+                foreach (Keybind keybind in keybinds)
                 {
-                    ((OptionsUI)instance).CreateKeyBindingLine(keybind.Name, keybind.Action);
+                    options.CreateKeyBindingLine(keybind.Name, keybind.Action);
                 }
-                else if (instance is GamepadPanel)
+            }
+            else if (instance is GamepadPanel panel)
+            {
+                foreach (Keybind keybind in keybinds)
                 {
-                    ((GamepadPanel)instance).CreateGamepadBindingLine(keybind.Name, keybind.Action);
+                    panel.CreateGamepadBindingLine(keybind.Name, keybind.Action);
                 }
-                else
-                {
-                    throw new System.ArgumentException(nameof(instance)); // How? Why?
-                }
+            }
+            else
+            {
+                throw new System.ArgumentException(nameof(instance)); // How? Why?
             }
         }
     }
